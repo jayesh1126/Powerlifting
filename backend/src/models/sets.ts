@@ -1,0 +1,14 @@
+import { InferSchemaType, Schema, model } from "mongoose";
+
+const setsSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+  exerciseName: {type: String, required: true},
+  weight: {type: Number, required: true},
+  repetitions: {type: Number, required: true},
+  rpe: {type: Number, required: true},  
+});
+
+type Sets = InferSchemaType<typeof setsSchema>;
+
+export default model<Sets>("Sets", setsSchema);
+
