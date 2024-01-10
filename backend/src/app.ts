@@ -1,10 +1,19 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import setRoutes from "./routes/exercises";
+import setRoute from "./routes/user";
+import morgan from "morgan";
 
 const app = express();
 
+app.use(morgan("dev"));
+
+app.use(express.json());
+
+
 app.use("/api/sets", setRoutes);
+
+app.use("/api/users", setRoute);
 
 app.use((req, res, next) => {
     next(Error("Endpoint not found"));
