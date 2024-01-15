@@ -11,6 +11,8 @@ export const getUsers: RequestHandler = async (req, res, next) => {
     }
 };
 
+
+
 export const createUser: RequestHandler = async (req, res, next) =>{
     // To change as autocomplete from db later for this one
     const fullName = req.body.fullName;
