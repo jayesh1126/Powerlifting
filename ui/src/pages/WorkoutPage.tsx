@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../layouts/PageHeader';
-import { profile } from '../data/home';
-import { DashboardView } from '../components/DashboardView';
 import { DefaultSidebar } from '../components/DefaultSidebar';
 import { Set } from '../models/set';
 
