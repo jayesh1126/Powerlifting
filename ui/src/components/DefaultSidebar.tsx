@@ -17,6 +17,14 @@ export const DefaultSidebar: React.FC = () => {
     navigate('/');
   };
 
+  const handleWorkout = () => {
+    navigate('/workouts');
+  }
+
+  const handleDashboard = () => {
+    navigate('/dashboard');
+  }
+
   return (
     <Card className="w-64 lg:w-72 xl:w-80 p-4 shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
@@ -25,13 +33,13 @@ export const DefaultSidebar: React.FC = () => {
         </Typography>
       </div>
       <List>
-        <ListItem>
+        <ListItem onClick={handleDashboard}>
           <Link to="/" className="flex items-center">
             <PresentationChartBarIcon className="h-5 w-5" />
             Dashboard
           </Link>
         </ListItem>
-        <ListItem>
+        <ListItem onClick={handleWorkout}>
           {/* The workouts link is non-functional for now, so it's just a text item */}
           <div className="flex items-center">
             {/* Replace with actual icon */}

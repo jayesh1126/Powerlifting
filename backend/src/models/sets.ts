@@ -5,7 +5,8 @@ const setsSchema = new Schema({
   exerciseName: {type: String, required: true},
   weight: {type: Number, required: true},
   repetitions: {type: Number, required: true},
-  rpe: {type: Number, required: true},  
+  rpe: {type: Number, required: true},
+  date: {type: Date, required: true},  
 });
 
 type Sets = InferSchemaType<typeof setsSchema>;

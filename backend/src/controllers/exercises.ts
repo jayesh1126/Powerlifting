@@ -37,7 +37,8 @@ interface CreateSetBody {
     exerciseName?: string,
     weight?: number,
     repetitions?: number,
-    rpe?: number
+    rpe?: number,
+    date?: Date
 }
 
 export const createSet: RequestHandler<unknown, unknown, CreateSetBody, unknown> = async (req, res, next) =>{
@@ -47,6 +48,7 @@ export const createSet: RequestHandler<unknown, unknown, CreateSetBody, unknown>
     const weight = req.body.weight;
     const repetitions = req.body.repetitions;
     const rpe = req.body.rpe;
+    const date = req.body.date;
 
     try {
         if (!userId){
@@ -59,6 +61,7 @@ export const createSet: RequestHandler<unknown, unknown, CreateSetBody, unknown>
             weight: weight,
             repetitions: repetitions,
             rpe: rpe,
+            date: date,
         });
 
         res.status(201).json(newSet);
@@ -75,7 +78,8 @@ interface UpdateSetBody{
     exerciseName?: string,
     weight?: number,
     repetitions?: number,
-    rpe?: number
+    rpe?: number,
+    date?: Date,
 }
 
 export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, unknown> =async (req, res, next) => {
@@ -84,6 +88,7 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
     const newWeight = req.body.weight;
     const newRepetitions = req.body.repetitions;
     const newRpe = req.body.rpe;
+    const newDate = req.body.date;
     
     try {
          if (!mongoose.isValidObjectId(setId)){
@@ -101,6 +106,7 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
         set.weight = newWeight!;
         set.repetitions = newRepetitions!;
         set.rpe = newRpe!;
+        set.date = newDate!;
 
         const updatedSet = await set.save();
 
