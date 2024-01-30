@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../layouts/PageHeader';
 import { DefaultSidebar } from '../components/DefaultSidebar';
 import { Set } from '../models/set';
+import { SetsList } from '../components/SetsList';
 
 function WorkoutPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -39,7 +40,12 @@ function WorkoutPage() {
           )}
           <div className='flex-grow overflow-auto'>
             <div className="p-8">
-              {JSON.stringify(sets)}
+            <button 
+            className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => {/* Function to show add set form */}}>
+              Add New Set
+            </button>
+            <SetsList sets={sets} />
             </div>
           </div>
         </div>
