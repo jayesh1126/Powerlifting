@@ -3,16 +3,18 @@ import { PageHeader } from '../layouts/PageHeader';
 import { DefaultSidebar } from '../components/DefaultSidebar';
 import { Set } from '../models/set';
 import { SetsList } from '../components/SetsList';
+import * as SetsApi from "../network/sets_api";
+import AddSetForm from '../components/AddSetForm';
 
 function WorkoutPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sets, setSets] = useState<Set[]>([]);
+    const [showAddSetForm, setShowSetForm] = useState(false);
 
     useEffect(() => {
         async function loadSets() {
             try {
-                const response = await fetch("/api/sets", {method: "GET"});
-                const sets = await response.json();
+                const sets = await SetsApi.fetchSets();
                 setSets(sets);
             } catch (error) {
                 console.error(error);
@@ -42,11 +44,19 @@ function WorkoutPage() {
             <div className="p-8">
             <button 
             className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => {/* Function to show add set form */}}>
+            onClick={() => setShowSetForm(true)}>
               Add New Set
             </button>
             <SetsList sets={sets} />
             </div>
+            { showAddSetForm &&
+              <AddSetForm
+              onClose={() => setShowSetForm(false)}
+              onSetSaved={(newSet) => {
+                setSets([...sets, newSet]);
+                setShowSetForm(false);
+              }} />
+            }
           </div>
         </div>
       </div>
