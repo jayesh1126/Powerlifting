@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Set } from "../models/set";
 import { useForm } from 'react-hook-form';
 import { SetInput } from '../network/sets_api';
@@ -9,14 +8,6 @@ interface AddSetFormProps {
     onSetSaved: (set: Set) => void,
   }
   
-  interface FormData {
-    userId: string,
-    exerciseName: string;
-    weight: number;
-    repetitions: number;
-    rpe: number;
-    date: string;
-  }
   
   const AddSetForm = ({onClose, onSetSaved}: AddSetFormProps) => {
     const {register, handleSubmit, formState: {errors, isSubmitting} } = useForm<SetInput>();

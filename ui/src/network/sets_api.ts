@@ -36,3 +36,7 @@ export async function createSet(set: SetInput): Promise<Set>{
     });
     return response.json();
 }
+
+export async function deleteSet(setId: string){
+    await fetchData("api/sets/" + setId, { method: "DELETE"});
+}

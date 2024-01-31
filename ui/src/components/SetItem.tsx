@@ -1,13 +1,15 @@
 import React from 'react';
 import { Set } from '../models/set';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { Set as SetModel } from "../models/set";
 
 type SetItemProps = {
   set: Set;
+  onDeleteSetClicked: (set: SetModel) => void,
   // Add any additional props you might need for handlers
 };
 
-export const SetItem: React.FC<SetItemProps> = ({ set }) => {
+export const SetItem: React.FC<SetItemProps> = ({ set, onDeleteSetClicked }) => {
   // Function handlers for edit and delete would be added here
 
   return (
@@ -19,7 +21,11 @@ export const SetItem: React.FC<SetItemProps> = ({ set }) => {
           <button className="text-indigo-600 hover:text-indigo-900 mr-2">
             <PencilIcon className="h-5 w-5 inline" />
           </button>
-          <button className="text-red-600 hover:text-red-900">
+          <button className="text-red-600 hover:text-red-900" 
+          onClick={(e) => {
+            onDeleteSetClicked(set);
+            e.stopPropagation();
+          }}>
             <TrashIcon className="h-5 w-5 inline" />
           </button>
         </div>

@@ -25,6 +25,17 @@ function WorkoutPage() {
         loadSets();
     }, []);
   
+
+    async function deleteSet(set: Set) {
+      try {
+        await SetsApi.deleteSet(set._id);
+        setSets(sets.filter(existingSet => existingSet._id !== set._id));
+      } catch (error) {
+        console.error(error);
+        alert(error);
+      }
+    }
+
     const toggleSidebar = () => {
       setIsSidebarOpen(!isSidebarOpen);
     };
@@ -47,7 +58,7 @@ function WorkoutPage() {
             onClick={() => setShowSetForm(true)}>
               Add New Set
             </button>
-            <SetsList sets={sets} />
+            <SetsList sets={sets} onDeleteSetClicked={deleteSet} />
             </div>
             { showAddSetForm &&
               <AddSetForm
