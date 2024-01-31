@@ -1,22 +1,36 @@
 import { Set } from "../models/set";
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { SetInput } from '../network/sets_api';
 import * as SetsApi from "../network/sets_api";
 
-interface AddSetFormProps {
+interface AddEditSetFormProps {
+    setToEdit?: Set,
     onClose: () => void;
     onSetSaved: (set: Set) => void,
   }
   
   
-  const AddSetForm = ({onClose, onSetSaved}: AddSetFormProps) => {
-    const {register, handleSubmit, formState: {errors, isSubmitting} } = useForm<SetInput>();
+  const AddEditSetForm = ({setToEdit, onClose, onSetSaved}: AddEditSetFormProps) => {
+    const {register, handleSubmit, formState: {errors, isSubmitting} } = useForm<SetInput>({
+      defaultValues:{
+        exerciseName: setToEdit?.exerciseName || "",
+        userId: setToEdit?.userId || "",
+        weight: setToEdit?.weight || "",
+        repetitions: setToEdit?.repetitions || "",
+        rpe: setToEdit?.rpe || "",
+        date: setToEdit?.date || "",
+      }
+    });
 
     async function onSubmit(input: SetInput){
         try {
-            const setResponse = await SetsApi.createSet(input);
-            onSetSaved(setResponse);
-            // onClose();
+          let setResponse: Set;
+          if (setToEdit){
+            setResponse = await SetsApi.updateSet(setToEdit._id, input);
+          } else{
+            setResponse = await SetsApi.createSet(input);
+          }
+          onSetSaved(setResponse);
         } catch (error) {
             console.error(error);
             alert(error);            
@@ -27,7 +41,9 @@ interface AddSetFormProps {
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
         <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
           <div className="mt-3 text-center">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Add New Set</h3>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              {setToEdit ? "Edit Set" : "Add Set"}
+            </h3>
             <form className="mt-2" onSubmit={handleSubmit(onSubmit)}>
               <input
                 type="text"
@@ -95,4 +111,4 @@ interface AddSetFormProps {
     );
   };
 
-export default AddSetForm;
+export default AddEditSetForm;

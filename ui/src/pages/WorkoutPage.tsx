@@ -4,12 +4,13 @@ import { DefaultSidebar } from '../components/DefaultSidebar';
 import { Set } from '../models/set';
 import { SetsList } from '../components/SetsList';
 import * as SetsApi from "../network/sets_api";
-import AddSetForm from '../components/AddSetForm';
+import AddEditSetForm from '../components/AddEditSetForm';
 
 function WorkoutPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sets, setSets] = useState<Set[]>([]);
     const [showAddSetForm, setShowSetForm] = useState(false);
+    const [setToEdit, setSetToEdit] = useState<Set|null>(null);
 
     useEffect(() => {
         async function loadSets() {
@@ -58,16 +59,28 @@ function WorkoutPage() {
             onClick={() => setShowSetForm(true)}>
               Add New Set
             </button>
-            <SetsList sets={sets} onDeleteSetClicked={deleteSet} />
+            <SetsList sets={sets} onDeleteSetClicked={deleteSet} 
+            onSetClicked={setSetToEdit} />
             </div>
             { showAddSetForm &&
-              <AddSetForm
+              <AddEditSetForm
               onClose={() => setShowSetForm(false)}
               onSetSaved={(newSet) => {
                 setSets([...sets, newSet]);
                 setShowSetForm(false);
               }} />
             }
+            {setToEdit &&
+            <AddEditSetForm
+            setToEdit={setToEdit}
+            onClose={() => setSetToEdit(null)}
+            onSetSaved={(updatedSet) =>{
+              setSets(sets.map(existingSet => existingSet._id === updatedSet._id 
+                ? updatedSet : existingSet))
+                setSetToEdit(null);
+            }}
+            />
+          };
           </div>
         </div>
       </div>

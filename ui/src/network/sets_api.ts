@@ -20,8 +20,8 @@ export interface SetInput {
     userId: string,
     exerciseName: string,
     weight: string,
-    repetitions: number,
-    rpe: number,
+    repetitions: string,
+    rpe: string,
     date: string,
 }
 
@@ -29,6 +29,18 @@ export async function createSet(set: SetInput): Promise<Set>{
     const response = await fetchData("/api/sets",
     {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(set),
+    });
+    return response.json();
+}
+
+export async function updateSet(setId: string, set: SetInput): Promise<Set> {
+    const response = await fetchData("/api/sets/" + setId,
+    {
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json",
         },
