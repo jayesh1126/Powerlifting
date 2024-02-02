@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage onLoginSuccessful={() => { }} />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/workouts" element={<WorkoutPage />} />
         {/* Add more routes as needed */}
