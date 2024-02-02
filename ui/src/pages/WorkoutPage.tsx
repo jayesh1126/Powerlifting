@@ -11,15 +11,21 @@ function WorkoutPage() {
     const [sets, setSets] = useState<Set[]>([]);
     const [showAddSetForm, setShowSetForm] = useState(false);
     const [setToEdit, setSetToEdit] = useState<Set|null>(null);
+    const [setsLoading, setSetsLoading] = useState(true);
+    const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
 
     useEffect(() => {
         async function loadSets() {
             try {
+                SetShowSetLoadingError(false);
+                setSetsLoading(true);
                 const sets = await SetsApi.fetchSets();
                 setSets(sets);
             } catch (error) {
                 console.error(error);
-                alert(error);
+                SetShowSetLoadingError(true);
+            } finally {
+              setSetsLoading(false)
             }
             
         }
@@ -59,8 +65,17 @@ function WorkoutPage() {
             onClick={() => setShowSetForm(true)}>
               Add New Set
             </button>
-            <SetsList sets={sets} onDeleteSetClicked={deleteSet} 
-            onSetClicked={setSetToEdit} />
+            {showSetLoadingError && <p>Something went wrong, please refresh the page.</p>}
+            {!setsLoading && !showSetLoadingError &&
+            <>
+            { sets.length > 0
+                ? <SetsList sets={sets} onDeleteSetClicked={deleteSet} 
+                onSetClicked={setSetToEdit} />
+                : <p>You don't have any sets yet.</p>
+            }
+            </>
+            }
+            
             </div>
             { showAddSetForm &&
               <AddEditSetForm
@@ -80,7 +95,7 @@ function WorkoutPage() {
                 setSetToEdit(null);
             }}
             />
-          };
+          }
           </div>
         </div>
       </div>

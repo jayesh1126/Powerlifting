@@ -1,5 +1,5 @@
 import { Set } from "../models/set";
-import { set, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { SetInput } from '../network/sets_api';
 import * as SetsApi from "../network/sets_api";
 
@@ -11,14 +11,14 @@ interface AddEditSetFormProps {
   
   
   const AddEditSetForm = ({setToEdit, onClose, onSetSaved}: AddEditSetFormProps) => {
-    const {register, handleSubmit, formState: {errors, isSubmitting} } = useForm<SetInput>({
+    const {register, handleSubmit, formState: { isSubmitting} } = useForm<SetInput>({
       defaultValues:{
         exerciseName: setToEdit?.exerciseName || "",
         userId: setToEdit?.userId || "",
         weight: setToEdit?.weight || "",
         repetitions: setToEdit?.repetitions || "",
         rpe: setToEdit?.rpe || "",
-        date: setToEdit?.date || "",
+        date: setToEdit?.date.substring(0,10) || "",
       }
     });
 
@@ -92,7 +92,7 @@ interface AddEditSetFormProps {
                   disabled={isSubmitting}
                   className="px-4 py-2 bg-indigo-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 >
-                  Add Set
+                  {setToEdit ? "Edit Set" : "Add Set"}
                 </button>
               </div>
             </form>
