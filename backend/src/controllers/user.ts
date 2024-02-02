@@ -1,62 +1,105 @@
 import { RequestHandler } from "express";
 import UserModel from "../models/user";
+import createHttpError from "http-errors";
+import bcrypt from "bcrypt";
 
-export const getUsers: RequestHandler = async (req, res, next) => {
-    try{
-        // throw Error("There was an error")
-        const set = await UserModel.find().exec();
-        res.status(200).json(set)
-    } catch (error) {
-        next(error)
-    }
-};
-
-
-
-export const createUser: RequestHandler = async (req, res, next) =>{
-    // To change as autocomplete from db later for this one
-    const fullName = req.body.fullName;
-    const username = req.body.username; // This could be undefined if not provided
-    const email = req.body.email;
-    const passwordHash = req.body.passwordHash; // Ensure this is hashed
-    const age = req.body.age;
-    const weight = req.body.weight;
-    const bestSquat = req.body.bestSquat;
-    const bestBenchPress = req.body.bestBenchPress;
-    const bestDeadlift = req.body.bestDeadlift;
-    const bestTotal = req.body.bestTotal;
-    const squatGoal = req.body.squatGoal;
-    const benchPressGoal = req.body.benchPressGoal;
-    const deadliftGoal = req.body.deadliftGoal;
-    const totalGoal = req.body.totalGoal;
-    const googleId = req.body.googleId; // Optional Google OAuth ID
-    const accessToken = req.body.accessToken; // Optional OAuth Access Token
-    const refreshToken = req.body.refreshToken; // Optional OAuth Refresh Token
-
-
+export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
+    const authenticatedUserId = req.session.userId;
+    
     try {
-        const newSet = await UserModel.create({
-            fullName,
-            username, // Username is optional, so it's okay if it's undefined
-            email,
-            passwordHash, // Make sure to hash the password before saving
-            age,
-            weight,
-            bestSquat,
-            bestBenchPress,
-            bestDeadlift,
-            bestTotal,
-            squatGoal,
-            benchPressGoal,
-            deadliftGoal,
-            totalGoal,
-            googleId, // If undefined, Mongoose won't include it
-            accessToken, // If undefined, Mongoose won't include it
-            refreshToken // If undefined, Mongoose won't include it
-        });
+        if (!authenticatedUserId) {
+            throw createHttpError(401, "User not authenticated");
+        }
 
-        res.status(201).json(newSet);
+        const user = await UserModel.findById(authenticatedUserId).select("+email").exec();
+        res.status(200).json(user);
+
     } catch (error) {
         next(error);
     }
 }
+
+interface SignUpBody {
+    username?: string,
+    email?: string,
+    password?: string,
+
+}
+export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (req, res, next) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const passwordRaw = req.body.password;
+
+    try {
+        if (!username || !email || !passwordRaw){
+            throw createHttpError(400, "Parameters missing");
+        }
+
+        const existingUsername = await UserModel.findOne({ username: username}).exec();
+        if (existingUsername) {
+            throw createHttpError(409, "The username is already taken, please choose a different one.");
+        }
+
+        const existingEmail = await UserModel.findOne({ email: email}).exec();
+        if (existingEmail) {
+            throw createHttpError(409, "The email is already in use, please choose a different one.");
+        }
+
+        const passwordHashed = await bcrypt.hash(passwordRaw, 10);
+
+        const newUser = await UserModel.create({
+            username: username,
+            email: email,
+            password: passwordHashed,
+        });
+
+        req.session.userId = newUser._id;
+
+        res.status(201).json(newUser);
+    } catch (error) {
+        next(error);
+    }
+}
+
+interface LoginBody {
+    username?: string,
+    password?: string,
+}
+
+export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    
+    try {
+        if (!username || !password) {
+            throw createHttpError(400, "Parameters missing");
+        }
+
+        const user = await UserModel.findOne({username: username}).select("+password +email").exec();
+
+        if (!user){
+            throw createHttpError(401, "Invalid credentials");
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            throw createHttpError(401, "Invalid credentials");
+        }
+
+        req.session.userId = user._id;
+        res.status(201).json(user);
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const logout: RequestHandler = (req, res, next) => {
+    req.session.destroy(error => {
+        if (error) {
+            next(error);
+        } else {
+            res.sendStatus(200);
+        }
+    })
+};
