@@ -5,8 +5,15 @@ import { Set } from '../models/set';
 import { SetsList } from '../components/SetsList';
 import * as SetsApi from "../network/sets_api";
 import AddEditSetForm from '../components/AddEditSetForm';
+import { User } from '../models/user';
 
-function WorkoutPage() {
+interface WorkoutPageProps {
+  // To remove null
+  loggedInUser: User,
+  onLogoutSuccessful: () => void,
+}
+
+export const WorkoutPage = ({loggedInUser, onLogoutSuccessful} : WorkoutPageProps) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sets, setSets] = useState<Set[]>([]);
     const [showAddSetForm, setShowSetForm] = useState(false);
@@ -55,7 +62,10 @@ function WorkoutPage() {
           {/* Control the rendering of the sidebar based on isSidebarOpen */}
           {isSidebarOpen && (
             <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
-              <DefaultSidebar />
+              <DefaultSidebar 
+            // To put user in there later
+            loggedInUser={loggedInUser}
+            onLogoutSuccessful={onLogoutSuccessful}/>
             </div>
           )}
           <div className='flex-grow overflow-auto'>

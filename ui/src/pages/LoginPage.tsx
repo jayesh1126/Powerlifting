@@ -77,7 +77,7 @@ const LoginPage = ({ onLoginSuccessful }: LoginPageProps) => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+              <a href="a" className="font-medium text-blue-600 hover:text-blue-500">
                 Forgot your password?
               </a>
             </div>
@@ -86,6 +86,7 @@ const LoginPage = ({ onLoginSuccessful }: LoginPageProps) => {
           <div>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="group relative w-full flex justify-center py-2 px-4 mb-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -102,7 +103,9 @@ const LoginPage = ({ onLoginSuccessful }: LoginPageProps) => {
       { showSignUp &&
       <SignUpForm
       onDismiss={() => setShowSignUp(false) }
-      onSignupSuccessful={() => { }}
+      onSignupSuccessful={(user) => { setShowSignUp(false);
+      navigate('/dashboard');
+    onLoginSuccessful(user);}}
       />
 }
     </div>

@@ -4,8 +4,15 @@ import { CategoryPills } from '../components/CategoryPills';
 import { categories, profile } from '../data/home';
 import { DashboardView } from '../components/DashboardView';
 import { DefaultSidebar } from '../components/DefaultSidebar';
+import { User } from '../models/user';
 
-function DashboardPage() {
+interface DashboardPageProps {
+  // To remove null
+  loggedInUser: User,
+  onLogoutSuccessful: () => void,
+}
+
+export const DashboardPage = ({loggedInUser, onLogoutSuccessful} : DashboardPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -21,7 +28,10 @@ function DashboardPage() {
         {/* Control the rendering of the sidebar based on isSidebarOpen */}
         {isSidebarOpen && (
           <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
-            <DefaultSidebar />
+            <DefaultSidebar 
+            // To put user in there later
+            loggedInUser={loggedInUser}
+            onLogoutSuccessful={onLogoutSuccessful}/>
           </div>
         )}
         <div className='flex-grow overflow-auto'>
