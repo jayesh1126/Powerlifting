@@ -14,7 +14,6 @@ interface AddEditSetFormProps {
     const {register, handleSubmit, formState: { isSubmitting} } = useForm<SetInput>({
       defaultValues:{
         exerciseName: setToEdit?.exerciseName || "",
-        userId: setToEdit?.userId || "",
         weight: setToEdit?.weight || "",
         repetitions: setToEdit?.repetitions || "",
         rpe: setToEdit?.rpe || "",
@@ -51,13 +50,6 @@ interface AddEditSetFormProps {
                 className="mt-2 p-2 border rounded-md w-full"
                 required
                 {...register("exerciseName")}
-              />
-              <input
-                type="text"
-                placeholder="User ID"
-                className="mt-2 p-2 border rounded-md w-full"
-                required
-                {...register("userId")}
               />
               <input
                 type="number"

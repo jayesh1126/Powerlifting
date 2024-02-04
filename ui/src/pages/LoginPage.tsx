@@ -103,9 +103,10 @@ const LoginPage = ({ onLoginSuccessful }: LoginPageProps) => {
       { showSignUp &&
       <SignUpForm
       onDismiss={() => setShowSignUp(false) }
-      onSignupSuccessful={(user) => { setShowSignUp(false);
-      navigate('/dashboard');
-    onLoginSuccessful(user);}}
+      onSignupSuccessful={(user) => { 
+        setShowSignUp(false);
+        navigate('/dashboard');
+        onLoginSuccessful(user);}}
       />
 }
     </div>

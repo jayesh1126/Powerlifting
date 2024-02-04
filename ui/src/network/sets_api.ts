@@ -60,7 +60,6 @@ export async function fetchSets(): Promise<Set[]>{
 }
 
 export interface SetInput {
-    userId: string,
     exerciseName: string,
     weight: string,
     repetitions: string,

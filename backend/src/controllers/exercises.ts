@@ -2,11 +2,16 @@ import { RequestHandler } from "express";
 import SetsModel from "../models/sets";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
+import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getSets: RequestHandler = async (req, res, next) => {
+    const authenticatedUserId = req.session.userId;
+    
     try{
+        assertIsDefined(authenticatedUserId);
+
         // throw Error("There was an error")
-        const set = await SetsModel.find().exec();
+        const set = await SetsModel.find({userId: authenticatedUserId}).exec();
         res.status(200).json(set)
     } catch (error) {
         next(error)
@@ -15,8 +20,13 @@ export const getSets: RequestHandler = async (req, res, next) => {
 
 export const getSet: RequestHandler = async(req, res, next) =>{
     const setId = req.params.setId;
+    const authenticatedUserId = req.session.userId;
+
 
     try {
+        assertIsDefined(authenticatedUserId);
+
+
         if (!mongoose.isValidObjectId(setId)){
             throw createHttpError(400, "Invalid set id");
         }
@@ -25,6 +35,10 @@ export const getSet: RequestHandler = async(req, res, next) =>{
 
         if(!set) {
             throw createHttpError(404, "Set not found")
+        }
+
+        if (!set.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this set");
         }
         res.status(200).json(set);        
     } catch (error) {
@@ -43,20 +57,19 @@ interface CreateSetBody {
 
 export const createSet: RequestHandler<unknown, unknown, CreateSetBody, unknown> = async (req, res, next) =>{
     // To change as autocomplete from db later for this one
-    const userId = req.body.userId;
     const exerciseName = req.body.exerciseName;
     const weight = req.body.weight;
     const repetitions = req.body.repetitions;
     const rpe = req.body.rpe;
     const date = req.body.date;
+    const authenticatedUserId = req.session.userId;
+
 
     try {
-        if (!userId){
-            throw createHttpError(400, "Set must be linked to a user");
-        }
+        assertIsDefined(authenticatedUserId);
 
         const newSet = await SetsModel.create({
-            userId: userId,
+            userId: authenticatedUserId,
             exerciseName: exerciseName,
             weight: weight,
             repetitions: repetitions,
@@ -89,8 +102,12 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
     const newRepetitions = req.body.repetitions;
     const newRpe = req.body.rpe;
     const newDate = req.body.date;
+    const authenticatedUserId = req.session.userId;
+
     
     try {
+        assertIsDefined(authenticatedUserId);
+
          if (!mongoose.isValidObjectId(setId)){
             throw createHttpError(400, "Invalid set id");
          }
@@ -99,6 +116,10 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
 
          if(!set) {
             throw createHttpError(404, "Set not found")
+        }
+
+        if (!set.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this set");
         }
 
         // Our front-end will ensure that those values are not null
@@ -118,8 +139,11 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
 
 export const deleteSet: RequestHandler = async(req, res, next) => {
     const setId = req.params.setId;
+    const authenticatedUserId = req.session.userId;
 
     try {
+        assertIsDefined(authenticatedUserId);
+
         if (!mongoose.isValidObjectId(setId)){
             throw createHttpError(400, "Invalid set id");
          }
@@ -127,6 +151,9 @@ export const deleteSet: RequestHandler = async(req, res, next) => {
 
          if(!set) {
             throw createHttpError(404, "Set not found")
+        }
+        if (!set.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this set");
         }
 
         await set.deleteOne();
