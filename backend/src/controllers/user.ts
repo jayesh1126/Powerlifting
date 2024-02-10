@@ -2,6 +2,8 @@ import { RequestHandler } from "express";
 import UserModel from "../models/user";
 import createHttpError from "http-errors";
 import bcrypt from "bcrypt";
+import { assertIsDefined } from "../util/assertIsDefined";
+import mongoose from "mongoose";
 
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
     try {
@@ -54,6 +56,77 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
     } catch (error) {
         next(error);
     }
+}
+
+interface UpdateUserParams {
+    userId: string,
+}
+
+interface UpdateUserBody{
+    fullName?: string,
+    age?: number,
+    weight?: number,
+    bestSquat?: number,
+    bestBenchPress?: number,
+    bestDeadlift?: number,
+    bestTotal?: number,
+    squatGoal?: number,
+    benchPressGoal?: number,
+    deadliftGoal?: number,
+    totalGoal?: number,
+}
+
+export const UpdateUser: RequestHandler<UpdateUserParams, unknown, UpdateUserBody, unknown> = async(req, res, next) => {
+    const userId = req.params.userId;
+    const fullName = req.body.fullName;
+    const age = req.body.age;
+    const weight = req.body.weight;
+    const bestSquat = req.body.bestSquat;
+    const bestBenchPress = req.body.bestBenchPress;
+    const bestDeadlift = req.body.bestDeadlift;
+    const bestTotal = req.body.bestTotal;
+    const squatGoal = req.body.squatGoal;
+    const benchPressGoal = req.body.benchPressGoal;
+    const deadliftGoal = req.body.deadliftGoal;
+    const totalGoal = req.body.totalGoal;
+    const authenticatedUserId = req.session.userId;
+
+    try {
+        assertIsDefined(authenticatedUserId);
+        
+        if (!mongoose.isValidObjectId(userId)){
+            throw createHttpError(400, "Invalid user id");
+         }
+
+         const user = await UserModel.findById(userId).exec();
+
+         if(!user) {
+            throw createHttpError(404, "User not found")
+        }
+        
+        if (!user._id.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this user");
+        }
+
+        user.fullName = fullName!;
+        user.age = age!;
+        user.weight = weight!;
+        user.bestSquat = bestSquat!;
+        user.bestBenchPress = bestBenchPress!;
+        user.bestDeadlift = bestDeadlift!;
+        user.bestTotal = bestTotal!;
+        user.squatGoal = squatGoal!;
+        user.benchPressGoal = benchPressGoal!;
+        user.deadliftGoal = deadliftGoal!;
+        user.totalGoal = totalGoal!;
+
+        const updatedUser = await user.save();
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        next(error);
+    }
+
 }
 
 interface LoginBody {
