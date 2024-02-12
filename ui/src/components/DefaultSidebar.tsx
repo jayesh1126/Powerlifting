@@ -41,11 +41,14 @@ export const DefaultSidebar = ({loggedInUser, onLogoutSuccessful} : DefaultSideb
     navigate('/dashboard');
   }
 
+  const handleProfile = () => {
+    navigate('/profile');
+  }
   return (
     <Card className="w-64 lg:w-72 xl:w-80 p-4 shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray">
-          Sidebar {loggedInUser.username}
+          Sidebar
         </Typography>
       </div>
       <List>
@@ -69,7 +72,7 @@ export const DefaultSidebar = ({loggedInUser, onLogoutSuccessful} : DefaultSideb
             Settings
           </Link>
         </ListItem>
-        <ListItem>
+        <ListItem onClick={handleProfile}>
           <Link to="/profile" className="flex items-center">
             <UserCircleIcon className="h-5 w-5" />
             Profile

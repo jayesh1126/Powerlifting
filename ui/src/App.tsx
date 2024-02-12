@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage'; 
 import WorkoutPage from './pages/WorkoutPage'; 
+import ProfilePage from './pages/ProfilePage'; 
 import { useEffect, useState } from 'react';
 import { User } from './models/user';
 import * as SetsApi from "./network/sets_api";
@@ -45,6 +46,9 @@ function App() {
         onLogoutSuccessful={() => setLoggedinUser(null)}/>:
          <LoginPage onLoginSuccessful={setLoggedinUser} />} />
         <Route path="/workouts" element={loggedInUser ?<WorkoutPage loggedInUser={loggedInUser}
+        onLogoutSuccessful={() => setLoggedinUser(null)}/>:
+         <LoginPage onLoginSuccessful={setLoggedinUser} />} />
+         <Route path="/profile" element={loggedInUser ?<ProfilePage loggedInUser={loggedInUser}
         onLogoutSuccessful={() => setLoggedinUser(null)}/>:
          <LoginPage onLoginSuccessful={setLoggedinUser} />} />
         {/* Add more routes as needed */}

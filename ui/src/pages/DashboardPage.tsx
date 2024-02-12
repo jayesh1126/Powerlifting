@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../layouts/PageHeader';
 import { CategoryPills } from '../components/CategoryPills';
-import { categories, profile } from '../data/home';
+import { categories } from '../data/home';
 import { DashboardView } from '../components/DashboardView';
 import { DefaultSidebar } from '../components/DefaultSidebar';
+import * as SetsApi from "../network/sets_api";
+import { Set } from '../models/set';
 import { User } from '../models/user';
 
 interface DashboardPageProps {
@@ -15,6 +17,30 @@ interface DashboardPageProps {
 export const DashboardPage = ({loggedInUser, onLogoutSuccessful} : DashboardPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
+  const [sets, setSets] = useState<Set[]>([]);
+  const [setsLoading, setSetsLoading] = useState(true);
+  const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
+
+  useEffect(() => {
+    async function loadSets() {
+        try {
+            SetShowSetLoadingError(false);
+            setSetsLoading(true);
+            const sets = await SetsApi.fetchSets();
+            setSets(sets);
+        } catch (error) {
+            console.error(error);
+            SetShowSetLoadingError(true);
+        } finally {
+          setSetsLoading(false)
+        }
+        
+    }
+    loadSets();
+}, []);
+
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -38,10 +64,13 @@ export const DashboardPage = ({loggedInUser, onLogoutSuccessful} : DashboardPage
           <div className='flex justify-center p-4'>
           <CategoryPills categories={categories} selectedCategory={selectedCategory} onSelect={setSelectedCategory} />
           </div>
+          {showSetLoadingError && <p>Something went wrong, please refresh the page.</p>}
+          {!setsLoading && !showSetLoadingError &&
           <div className="p-8">
-            <DashboardView key={profile[0].profileID} {...profile[0]} />
+            <DashboardView loggedInUser={loggedInUser} sets={sets} />
             {/* Other dashboard items */}
           </div>
+          }
         </div>
       </div>
     </div>
