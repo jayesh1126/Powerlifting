@@ -1,5 +1,6 @@
 export interface User {
     // All types string because it will come from JSON
+    _id: string,
     username: string,
     fullName: string,
     email: string,

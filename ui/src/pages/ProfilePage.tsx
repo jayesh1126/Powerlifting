@@ -3,6 +3,7 @@ import { User } from '../models/user';
 import { UserIcon } from "@heroicons/react/24/solid";
 import DefaultSidebar from '../components/DefaultSidebar';
 import { PageHeader } from '../layouts/PageHeader';
+import EditUserForm from '../components/EditUserForm';
 
 interface ProfilePageProps {
     // To remove null
@@ -12,6 +13,15 @@ interface ProfilePageProps {
 
   export const ProfilePage = ({loggedInUser, onLogoutSuccessful} : ProfilePageProps) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const [userInfo, setUserInfo] = useState(loggedInUser);
+    
+    const [userToEdit, setUserToEdit] = useState<User|null>(null);
+
+    const handleUserSaved = (updatedUser: React.SetStateAction<User>) => {
+      setUserInfo(updatedUser);
+      setUserToEdit(null);
+    }
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -23,7 +33,7 @@ interface ProfilePageProps {
   <div className='flex flex-1 min-h-0'>
     {isSidebarOpen && (
       <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
-        <DefaultSidebar loggedInUser={loggedInUser} onLogoutSuccessful={onLogoutSuccessful} />
+        <DefaultSidebar loggedInUser={userInfo} onLogoutSuccessful={onLogoutSuccessful} />
       </div>
     )}
     <div className="flex-grow p-6">
@@ -35,32 +45,40 @@ interface ProfilePageProps {
           {/* User Details */}
           <div>
             <h3 className="font-semibold text-lg mb-2">Personal Details</h3>
-            <p><strong>Name:</strong> {loggedInUser.fullName || "Not provided"}</p>
-            <p><strong>Age:</strong> {loggedInUser.age || "Not provided"}</p>
-            <p><strong>Weight:</strong> {loggedInUser.weight ? `${loggedInUser.weight} kg` : "Not provided"}</p>
+            <p><strong>Name:</strong> {userInfo.fullName || "Not provided"}</p>
+            <p><strong>Age:</strong> {userInfo.age || "Not provided"}</p>
+            <p><strong>Weight:</strong> {userInfo.weight ? `${userInfo.weight} kg` : "Not provided"}</p>
           </div>
           {/* Performance */}
           <div>
             <h3 className="font-semibold text-lg mb-2">Performance</h3>
-            <p><strong>Squat:</strong> {loggedInUser.bestSquat ? `${loggedInUser.bestSquat} kg` : "Not provided"}</p>
-            <p><strong>Bench Press:</strong> {loggedInUser.bestBenchPress ? `${loggedInUser.bestBenchPress} kg` : "Not provided"}</p>
-            <p><strong>Deadlift:</strong> {loggedInUser.bestDeadlift ? `${loggedInUser.bestDeadlift} kg` : "Not provided"}</p>
-            <p><strong>Total:</strong> {loggedInUser.bestTotal ? `${loggedInUser.bestTotal} kg` : "Not provided"}</p>
+            <p><strong>Squat:</strong> {userInfo.bestSquat ? `${userInfo.bestSquat} kg` : "Not provided"}</p>
+            <p><strong>Bench Press:</strong> {userInfo.bestBenchPress ? `${userInfo.bestBenchPress} kg` : "Not provided"}</p>
+            <p><strong>Deadlift:</strong> {userInfo.bestDeadlift ? `${userInfo.bestDeadlift} kg` : "Not provided"}</p>
+            <p><strong>Total:</strong> {userInfo.bestTotal ? `${userInfo.bestTotal} kg` : "Not provided"}</p>
             
           </div>
           {/* Goals */}
           <div className="col-span-1 md:col-span-2">
             <h3 className="font-semibold text-lg mb-2">Goals</h3>
-            <p><strong>Squat:</strong> {loggedInUser.squatGoal ? `${loggedInUser.squatGoal} kg` : "Not provided"}</p>
-            <p><strong>Bench Press:</strong> {loggedInUser.benchPressGoal ? `${loggedInUser.benchPressGoal} kg` : "Not provided"}</p>
-            <p><strong>Deadlift:</strong> {loggedInUser.deadliftGoal ? `${loggedInUser.deadliftGoal} kg` : "Not provided"}</p>
-            <p><strong>Total:</strong> {loggedInUser.totalGoal ? `${loggedInUser.totalGoal} kg` : "Not provided"}</p>
+            <p><strong>Squat:</strong> {userInfo.squatGoal ? `${userInfo.squatGoal} kg` : "Not provided"}</p>
+            <p><strong>Bench Press:</strong> {userInfo.benchPressGoal ? `${userInfo.benchPressGoal} kg` : "Not provided"}</p>
+            <p><strong>Deadlift:</strong> {userInfo.deadliftGoal ? `${userInfo.deadliftGoal} kg` : "Not provided"}</p>
+            <p><strong>Total:</strong> {userInfo.totalGoal ? `${userInfo.totalGoal} kg` : "Not provided"}</p>
           </div>
         </div>
-        <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => setUserToEdit(userInfo)}>
           Edit Profile
         </button>
       </div>
+      {userToEdit &&
+      <EditUserForm
+      userToEdit={userToEdit}
+      onClose={() => setUserToEdit(null)}
+      onUserSaved={(updatedUser) =>{
+        handleUserSaved(updatedUser);
+      }}/>}
     </div>
   </div>
 </div>

@@ -34,6 +34,32 @@ export async function signUp(credentials: SignUpCredentials): Promise<User> {
     return response.json();
 }
 
+export interface UserInput {
+    fullName: string,
+    age: string,
+    weight: string,
+    bestSquat: string,
+    bestBenchPress: string,
+    bestDeadlift: string,
+    bestTotal: string,
+    squatGoal: string,
+    benchPressGoal: string,
+    deadliftGoal: string,
+    totalGoal: string,
+}
+
+export async function updateUser(userId: string, user: UserInput): Promise<User>{
+    const response = await fetchData("/api/users/" + userId,
+    {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+    });
+    return response.json();
+}
+
 export interface LoginCredentials {
     username: string,
     password: string,
