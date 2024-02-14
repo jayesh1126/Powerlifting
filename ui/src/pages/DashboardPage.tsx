@@ -6,21 +6,21 @@ import { DashboardView } from '../components/DashboardView';
 import { DefaultSidebar } from '../components/DefaultSidebar';
 import * as SetsApi from "../network/sets_api";
 import { Set } from '../models/set';
-import { User } from '../models/user';
+import { useUser } from '../components/UserContext';
 
 interface DashboardPageProps {
-  // To remove null
-  loggedInUser: User,
   onLogoutSuccessful: () => void,
 }
 
-export const DashboardPage = ({loggedInUser, onLogoutSuccessful} : DashboardPageProps) => {
+export const DashboardPage = ({ onLogoutSuccessful} : DashboardPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [sets, setSets] = useState<Set[]>([]);
   const [setsLoading, setSetsLoading] = useState(true);
   const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
+
+  const { user } = useUser();
 
   useEffect(() => {
     async function loadSets() {
@@ -54,10 +54,7 @@ export const DashboardPage = ({loggedInUser, onLogoutSuccessful} : DashboardPage
         {/* Control the rendering of the sidebar based on isSidebarOpen */}
         {isSidebarOpen && (
           <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
-            <DefaultSidebar 
-            // To put user in there later
-            loggedInUser={loggedInUser}
-            onLogoutSuccessful={onLogoutSuccessful}/>
+            <DefaultSidebar />
           </div>
         )}
         <div className='flex-grow overflow-auto'>
@@ -67,7 +64,7 @@ export const DashboardPage = ({loggedInUser, onLogoutSuccessful} : DashboardPage
           {showSetLoadingError && <p>Something went wrong, please refresh the page.</p>}
           {!setsLoading && !showSetLoadingError &&
           <div className="p-8">
-            <DashboardView loggedInUser={loggedInUser} sets={sets} />
+            <DashboardView sets={sets} />
             {/* Other dashboard items */}
           </div>
           }

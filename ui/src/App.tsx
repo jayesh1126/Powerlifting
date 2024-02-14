@@ -7,10 +7,11 @@ import ProfilePage from './pages/ProfilePage';
 import { useEffect, useState } from 'react';
 import { User } from './models/user';
 import * as SetsApi from "./network/sets_api";
+import { UserProvider } from './components/UserContext';
 
 function App() {
   
-  const [loggedInUser, setLoggedinUser] = useState<User|null>(null);
+  const [loggedInUser, setLoggedinUser] = useState<User|undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
 
   useEffect(() => {
@@ -37,23 +38,22 @@ function App() {
   }
   
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={loggedInUser ? <DashboardPage loggedInUser={loggedInUser}
-        onLogoutSuccessful={() => setLoggedinUser(null)} /> :
-         <LoginPage onLoginSuccessful={setLoggedinUser} />} />
-        <Route path="/dashboard" element={loggedInUser ? <DashboardPage loggedInUser={loggedInUser}
-        onLogoutSuccessful={() => setLoggedinUser(null)}/>:
-         <LoginPage onLoginSuccessful={setLoggedinUser} />} />
-        <Route path="/workouts" element={loggedInUser ?<WorkoutPage loggedInUser={loggedInUser}
-        onLogoutSuccessful={() => setLoggedinUser(null)}/>:
-         <LoginPage onLoginSuccessful={setLoggedinUser} />} />
-         <Route path="/profile" element={loggedInUser ?<ProfilePage loggedInUser={loggedInUser}
-        onLogoutSuccessful={() => setLoggedinUser(null)}/>:
-         <LoginPage onLoginSuccessful={setLoggedinUser} />} />
-        {/* Add more routes as needed */}
-      </Routes>
-    </Router>
+    <UserProvider user={loggedInUser} setUser={setLoggedinUser}>
+      <Router>
+        <Routes>
+          <Route path="/" element={loggedInUser ? <DashboardPage onLogoutSuccessful={() => setLoggedinUser(undefined)} /> :
+          <LoginPage/>} />
+          <Route path="/dashboard" element={loggedInUser ? <DashboardPage onLogoutSuccessful={() => setLoggedinUser(undefined)}/>:
+          <LoginPage/>} />
+          <Route path="/workouts" element={loggedInUser ?<WorkoutPage onLogoutSuccessful={() => setLoggedinUser(undefined)}/>:
+          <LoginPage/>} />
+          <Route path="/profile" element={loggedInUser ?<ProfilePage loggedInUser={loggedInUser}
+          onLogoutSuccessful={() => setLoggedinUser(undefined)}/>:
+          <LoginPage/>} />
+          {/* Add more routes as needed */}
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 }
 

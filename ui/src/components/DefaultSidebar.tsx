@@ -8,24 +8,20 @@ import {
   PowerIcon,
   // Replace with the actual icon import for workouts
 } from "@heroicons/react/24/solid";
-import { User } from '../models/user';
 import * as SetsApi from "../network/sets_api";
 
+import { useUser } from './UserContext';
 
-interface DefaultSidebarProps {
-  // To remove null
-  loggedInUser: User,
-  onLogoutSuccessful: () => void,
-}
 
-export const DefaultSidebar = ({loggedInUser, onLogoutSuccessful} : DefaultSidebarProps) => {
+export const DefaultSidebar = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
 
   async function logout() {
     try {
         await SetsApi.logout();
-        onLogoutSuccessful();
+        setUser(undefined);
         navigate('/');
     } catch (error) {
         console.error(error);

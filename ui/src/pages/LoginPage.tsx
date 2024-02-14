@@ -5,21 +5,21 @@ import SignUpForm from '../components/SignUpForm';
 import { useForm } from 'react-hook-form';
 import { LoginCredentials } from '../network/sets_api';
 import * as SetsApi from "../network/sets_api";
-import { User } from '../models/user';
+import { useUser } from '../components/UserContext';
 
-interface LoginPageProps {
-  onLoginSuccessful: (user: User) => void,
-}
 
-const LoginPage = ({ onLoginSuccessful }: LoginPageProps) => {
+
+const LoginPage = () => {
   const navigate = useNavigate();
   const {register, handleSubmit, formState: { errors, isSubmitting }} = useForm<LoginCredentials>();
   const [showSignUp, setShowSignUp] = useState(false);
 
+  const { setUser } = useUser();
+
   async function onSubmit(credentials: LoginCredentials){
     try {
       const user = await SetsApi.login(credentials);
-      onLoginSuccessful(user);
+      setUser(user);
       navigate('/dashboard');
     } catch (error) {
       alert(error);
@@ -106,7 +106,7 @@ const LoginPage = ({ onLoginSuccessful }: LoginPageProps) => {
       onSignupSuccessful={(user) => { 
         setShowSignUp(false);
         navigate('/dashboard');
-        onLoginSuccessful(user);}}
+        setUser(user);}}
       />
 }
     </div>
