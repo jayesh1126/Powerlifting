@@ -6,7 +6,8 @@ import { Set as SetModel } from "../models/set";
 type SetsListProps = {
   sets: Set[];
   onDeleteSetClicked: (set: SetModel) => void,
-  onSetClicked: (set: SetModel) => void,
+  onSetClickedEdit: (set: SetModel) => void,
+  onSetClickedCopy: (set: SetModel) => void,
 };
 
 const groupSetsByDate = (sets: Set[]) => {
@@ -22,7 +23,7 @@ const groupSetsByDate = (sets: Set[]) => {
   return grouped;
 };
 
-export const SetsList: React.FC<SetsListProps> = ({ sets, onDeleteSetClicked, onSetClicked }) => {
+export const SetsList: React.FC<SetsListProps> = ({ sets, onDeleteSetClicked, onSetClickedEdit, onSetClickedCopy }) => {
   const groupedSets = groupSetsByDate(sets);
 
   // Sort the grouped sets by date in descending order
@@ -41,16 +42,30 @@ export const SetsList: React.FC<SetsListProps> = ({ sets, onDeleteSetClicked, on
 
   return (
     <div>
-  {sortedGroupedSets.map(([date, sets]) => (
-    <div key={date} className="mb-8">
-      <h2 className="text-2xl font-bold my-4">{date}</h2>
-      {sets.map(set => (
-        <SetItem key={set._id} set={set} onDeleteSetClicked={onDeleteSetClicked} onSetClicked={onSetClicked} />
+      {sortedGroupedSets.map(([date, sets]) => (
+        <div key={date} className="mb-8">
+          <h2 className="text-2xl font-bold my-2">{date}</h2>
+          <table className="min-w-full table-fixed">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">Exercise</th>
+                <th className="px-4 py-2">Weight</th>
+                <th className="px-4 py-2">Reps</th>
+                <th className="px-4 py-2">RPE</th>
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sets.map(set => (
+                // SetItem component will need to be updated to render <tr> elements
+                <SetItem key={set._id} set={set} onDeleteSetClicked={onDeleteSetClicked} onSetClickedEdit={onSetClickedEdit} onSetClickedCopy={onSetClickedCopy} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       ))}
     </div>
-  ))}
-</div>
   );
 };
-
 export default SetsList;

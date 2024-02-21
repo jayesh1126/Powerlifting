@@ -15,6 +15,7 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
     const [sets, setSets] = useState<Set[]>([]);
     const [showAddSetForm, setShowSetForm] = useState(false);
     const [setToEdit, setSetToEdit] = useState<Set|null>(null);
+    const [setToCopy, setSetToCopy] = useState<Set|null>(null);
     const [setsLoading, setSetsLoading] = useState(true);
     const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
     useEffect(() => {
@@ -67,7 +68,7 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
       </button>
       {showSetLoadingError && <div className="text-red-500">Something went wrong, please refresh the page.</div>}
       {!setsLoading && !showSetLoadingError && (
-        sets.length > 0 ? <SetsList sets={sets} onDeleteSetClicked={deleteSet} onSetClicked={setSetToEdit} />
+        sets.length > 0 ? <SetsList sets={sets} onDeleteSetClicked={deleteSet} onSetClickedEdit={setSetToEdit} onSetClickedCopy={setSetToCopy} />
         : <p className="text-gray-700">You don't have any sets yet.</p>
       )}
       {showAddSetForm && (
@@ -87,6 +88,16 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
             setSets(sets.map(existingSet => existingSet._id === updatedSet._id ? updatedSet : existingSet));
             setSetToEdit(null);
           }}
+        />
+      )}
+      {setToCopy && (
+        <AddEditSetForm
+          setToCopy={setToCopy}
+          onClose={() => setSetToCopy(null)}
+          onSetSaved={(newSet) => {
+            setSets([...sets, newSet]);
+            setSetToCopy(null);
+          }} 
         />
       )}
     </div>
