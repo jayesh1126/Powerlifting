@@ -31,18 +31,20 @@ interface ProfilePageProps {
       return (
         <div className='flex flex-col h-screen overflow-hidden'>
   <PageHeader toggleSidebar={toggleSidebar} />
-  <div className='flex flex-1 min-h-0'>
+  <div className='flex flex-1 overflow-auto'> {/* Adjusted for scrolling */}
     {isSidebarOpen && (
       <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
         <DefaultSidebar />
       </div>
     )}
     <div className="flex-grow p-6">
-      <div className="bg-white rounded-lg shadow p-4">
-      <UserIcon className="w-8 h-8 text-blue-500 mr-3" />
-        <div className="text-2xl font-semibold mb-4"> Profile</div>
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex items-center mb-6">
+          <UserIcon className="w-8 h-8 text-gray-700 mr-3" />
+          <h2 className="text-2xl font-bold text-gray-900">Profile</h2>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
           {/* User Details */}
           <div>
             <h3 className="font-semibold text-lg mb-2">Personal Details</h3>
@@ -57,7 +59,6 @@ interface ProfilePageProps {
             <p><strong>Bench Press:</strong> {user!.bestBenchPress ? `${user!.bestBenchPress} kg` : "Not provided"}</p>
             <p><strong>Deadlift:</strong> {user!.bestDeadlift ? `${user!.bestDeadlift} kg` : "Not provided"}</p>
             <p><strong>Total:</strong> {user!.bestTotal ? `${user!.bestTotal} kg` : "Not provided"}</p>
-            
           </div>
           {/* Goals */}
           <div className="col-span-1 md:col-span-2">
@@ -79,11 +80,13 @@ interface ProfilePageProps {
       onClose={() => setUserToEdit(null)}
       onUserSaved={(updatedUser) =>{
         handleUserSaved(updatedUser);
-        setUserToEdit(null)
+        setUserToEdit(null);
       }}/>}
     </div>
   </div>
 </div>
+
+      
       );
     }
     

@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../layouts/PageHeader';
-import { CategoryPills } from '../components/CategoryPills';
-import { categories } from '../data/home';
 import { DashboardView } from '../components/DashboardView';
 import { DefaultSidebar } from '../components/DefaultSidebar';
 import * as SetsApi from "../network/sets_api";
 import { Set } from '../models/set';
-import { useUser } from '../components/UserContext';
 
 interface DashboardPageProps {
   onLogoutSuccessful: () => void,
 }
 
 export const DashboardPage = ({ onLogoutSuccessful} : DashboardPageProps) => {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [sets, setSets] = useState<Set[]>([]);
   const [setsLoading, setSetsLoading] = useState(true);
   const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
 
-  const { user } = useUser();
 
   useEffect(() => {
     async function loadSets() {
@@ -58,9 +53,7 @@ export const DashboardPage = ({ onLogoutSuccessful} : DashboardPageProps) => {
           </div>
         )}
         <div className='flex-grow overflow-auto'>
-          <div className='flex justify-center p-4'>
-          <CategoryPills categories={categories} selectedCategory={selectedCategory} onSelect={setSelectedCategory} />
-          </div>
+
           {showSetLoadingError && <p>Something went wrong, please refresh the page.</p>}
           {!setsLoading && !showSetLoadingError &&
           <div className="p-8">

@@ -1,8 +1,6 @@
 export const categories = [
+    "All",
     "Squat",
-    "Bench",
+    "Bench Press",
     "Deadlift",
-    "Volume",
-    "One rep Max",
-    "Total",
 ]

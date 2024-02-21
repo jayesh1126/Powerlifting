@@ -3,6 +3,9 @@ import { Set as SetModel } from '../models/set';
 import PBComparisonChart from "./PBComparisonChart";
 import { useUser } from "./UserContext";
 import VolumeOverTimeChart from './VolumeOverTimeChart';
+import { RpeOverTimeChart } from './RpeOverTimeChart';
+import { categories } from '../data/home';
+import { CategoryPills } from './CategoryPills';
 
 
 interface DashboardViewProps {
@@ -14,6 +17,8 @@ interface DashboardViewProps {
 export const DashboardView = ({ sets } : DashboardViewProps) => {
 
   const { user } = useUser();
+
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   const [timeFrame, setTimeFrame] = useState<'week' | 'month' | 'year'>('week');
 
@@ -37,7 +42,20 @@ const filterSetsByTimeFrame = (timeFrame: 'week' | 'month' | 'year') => {
   return filteredSets;
 };
   
-const filteredSets = filterSetsByTimeFrame(timeFrame);
+const timeFilteredSets = filterSetsByTimeFrame(timeFrame);
+
+// Function to filter sets by the selected category
+const filterSetsByCategory = (sets: SetModel[], selectedCategory: string) => {
+  if (selectedCategory === "All"){
+    return sets;
+  }else{
+    return sets.filter(set => set.exerciseName === selectedCategory);
+  }
+  
+};
+
+const categoryFilteredSets = filterSetsByCategory(timeFilteredSets, selectedCategory);
+
 
   // Data for the PB comparison to goals chart
   const PBdata = [
@@ -69,9 +87,9 @@ const filteredSets = filterSetsByTimeFrame(timeFrame);
   }));
 };
 
-const squatVolumeData = calculateVolumeByDate(filteredSets, 'Squat');
-const benchPressVolumeData = calculateVolumeByDate(filteredSets, 'Bench Press');
-const deadliftVolumeData = calculateVolumeByDate(filteredSets, 'Deadlift');
+const squatVolumeData = calculateVolumeByDate(categoryFilteredSets, 'Squat');
+const benchPressVolumeData = calculateVolumeByDate(categoryFilteredSets, 'Bench Press');
+const deadliftVolumeData = calculateVolumeByDate(categoryFilteredSets, 'Deadlift');
 // console.log(squatVolumeData);
 // console.log(benchPressVolumeData);
 
@@ -91,45 +109,77 @@ const volumeOverTimeData = sortedDates.map((date) => ({
   squatVolume: squatVolumeData.find((squat) => squat.date === date)?.volume || 0,
   benchPressVolume: benchPressVolumeData.find((bp) => bp.date === date)?.volume || 0,
   deadliftVolume: deadliftVolumeData.find((dl) => dl.date === date)?.volume || 0,
+
+  
 }));
 
-  return (
-    <div className="flex flex-col items-center w-full">
-      <div className="text-xl font-bold mb-4">
-        Welcome back to your Dashboard, { user!.username} !
-        <select value={timeFrame} onChange={e => setTimeFrame(e.target.value as 'week')}>
-          <option value="week">Last Week</option>
-          <option value="month">Last Month</option>
-          <option value="year">Last Year</option>
-        </select>
-      </div>
-      
-      <div className="w-full max-w-7xl mx-auto p-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {/* Graph showing PBs vs. Goals */}
-          <div className="col-span-full lg:col-span-2 xl:col-span-3 p-4">
-            <div className="relative h-64"> {/* Adjust height as needed */}
-              <PBComparisonChart data={PBdata} />
-            </div>
-          </div>
-          {/* Graph showing volume over time for SBD */}
-          <div className="col-span-full lg:col-span-2 xl:col-span-3 p-4">
-            <div className="relative h-64"> {/* Adjust height as needed */}
-              <VolumeOverTimeChart data={volumeOverTimeData} />
-            </div>
-          </div>
 
-          {/* Placeholder for Graphs and Items */}
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full">
-              <h2 className="text-lg font-semibold mb-4">Graph {index + 1}</h2>
-              <div className="h-32 bg-gray-100 rounded flex items-center justify-center">
-                Content {index + 1}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+
+// Data for the RPE per date chart
+// console.log(filteredSets);
+  // Helper function to parse and sum the avergae rpe of dates
+  const calculateAverageRpeByDate = (sets: SetModel[]) => {
+    const rpeTotalsByDate: Record<string, { totalRpe: number, count: number }> = {};
+  
+    sets.forEach((set) => {
+      const date = set.date.split('T')[0]; // assuming date is in ISO format
+      const rpe = parseInt(set.rpe);
+      if (rpeTotalsByDate[date]) {
+        rpeTotalsByDate[date].totalRpe += rpe;
+        rpeTotalsByDate[date].count += 1;
+      } else {
+        rpeTotalsByDate[date] = { totalRpe: rpe, count: 1 };
+      }
+    });
+  
+    return Object.entries(rpeTotalsByDate).map(([date, { totalRpe, count }]) => ({
+      date,
+      averageRpe: totalRpe / count,
+    }));
+  };
+  
+  const AverageRpeByDate = calculateAverageRpeByDate(categoryFilteredSets);
+  // console.log(AverageRpeByDate);
+
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+                <div className='flex justify-center p-4'>
+          <CategoryPills categories={categories} selectedCategory={selectedCategory} onSelect={setSelectedCategory} />
+          </div>
+  <div className="flex flex-col items-center w-full mb-12">
+    <h1 className="text-3xl md:text-4xl font-bold mb-6">Welcome back to your Dashboard, {user!.username}!</h1>
+    <div className="w-full sm:w-1/3 lg:w-1/4 xl:w-1/5">
+      <select 
+        value={timeFrame} 
+        onChange={e => setTimeFrame(e.target.value as 'week')}
+        className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-lg"
+      >
+        <option value="week">Last Week</option>
+        <option value="month">Last Month</option>
+        <option value="year">Last Year</option>
+      </select>
     </div>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+    {/* Enhance each card with more padding and subtle shadows for depth */}
+    <div className="col-span-1 xl:col-span-3 p-8 bg-white rounded-lg shadow-lg">
+      <h3 className="text-xl font-semibold mb-4">PBs vs Goals</h3>
+      <PBComparisonChart data={PBdata} />
+    </div>
+    <div className="col-span-1 xl:col-span-3 p-8 bg-white rounded-lg shadow-lg">
+      <h3 className="text-xl font-semibold mb-4">Volume Over Time</h3>
+      <VolumeOverTimeChart data={volumeOverTimeData} />
+    </div>
+    <div className="col-span-1 xl:col-span-3 p-8 bg-white rounded-lg shadow-lg">
+      <h3 className="text-xl font-semibold mb-4">RPE Over Time</h3>
+      <RpeOverTimeChart data={AverageRpeByDate} />
+    </div>
+    {/* Additional Graphs */}
+  </div>
+</div>
+
+
   );
 }

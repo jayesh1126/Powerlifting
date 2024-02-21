@@ -5,7 +5,6 @@ import { Set } from '../models/set';
 import { SetsList } from '../components/SetsList';
 import * as SetsApi from "../network/sets_api";
 import AddEditSetForm from '../components/AddEditSetForm';
-import { useUser } from '../components/UserContext';
 
 interface WorkoutPageProps {
   onLogoutSuccessful: () => void,
@@ -18,8 +17,6 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
     const [setToEdit, setSetToEdit] = useState<Set|null>(null);
     const [setsLoading, setSetsLoading] = useState(true);
     const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
-    const { user, setUser } = useUser();
-
     useEffect(() => {
         async function loadSets() {
             try {
@@ -55,56 +52,47 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
   
     return (
       <div className='flex flex-col h-screen overflow-hidden'>
-        {/* Pass toggleSidebar to the PageHeader */}
-        <PageHeader toggleSidebar={toggleSidebar} />
-        <div className='flex flex-1 min-h-0'>
-          {/* Control the rendering of the sidebar based on isSidebarOpen */}
-          {isSidebarOpen && (
-            <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
-              <DefaultSidebar />
-            </div>
-          )}
-          <div className='flex-grow overflow-auto'>
-            <div className="p-8">
-            <button 
-            className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setShowSetForm(true)}>
-              Add New Set
-            </button>
-            {showSetLoadingError && <p>Something went wrong, please refresh the page.</p>}
-            {!setsLoading && !showSetLoadingError &&
-            <>
-            { sets.length > 0
-                ? <SetsList sets={sets} onDeleteSetClicked={deleteSet} 
-                onSetClicked={setSetToEdit} />
-                : <p>You don't have any sets yet.</p>
-            }
-            </>
-            }
-            
-            </div>
-            { showAddSetForm &&
-              <AddEditSetForm
-              onClose={() => setShowSetForm(false)}
-              onSetSaved={(newSet) => {
-                setSets([...sets, newSet]);
-                setShowSetForm(false);
-              }} />
-            }
-            {setToEdit &&
-            <AddEditSetForm
-            setToEdit={setToEdit}
-            onClose={() => setSetToEdit(null)}
-            onSetSaved={(updatedSet) =>{
-              setSets(sets.map(existingSet => existingSet._id === updatedSet._id 
-                ? updatedSet : existingSet))
-                setSetToEdit(null);
-            }}
-            />
-          }
-          </div>
-        </div>
+  <PageHeader toggleSidebar={toggleSidebar} />
+  <div className='flex flex-1 overflow-hidden'>
+    {isSidebarOpen && (
+      <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
+        <DefaultSidebar />
       </div>
+    )}
+    <div className='flex-grow overflow-auto p-8'>
+      <button 
+        className="mb-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1"
+        onClick={() => setShowSetForm(true)}>
+        Add New Set
+      </button>
+      {showSetLoadingError && <div className="text-red-500">Something went wrong, please refresh the page.</div>}
+      {!setsLoading && !showSetLoadingError && (
+        sets.length > 0 ? <SetsList sets={sets} onDeleteSetClicked={deleteSet} onSetClicked={setSetToEdit} />
+        : <p className="text-gray-700">You don't have any sets yet.</p>
+      )}
+      {showAddSetForm && (
+        <AddEditSetForm
+          onClose={() => setShowSetForm(false)}
+          onSetSaved={(newSet) => {
+            setSets([...sets, newSet]);
+            setShowSetForm(false);
+          }} 
+        />
+      )}
+      {setToEdit && (
+        <AddEditSetForm
+          setToEdit={setToEdit}
+          onClose={() => setSetToEdit(null)}
+          onSetSaved={(updatedSet) => {
+            setSets(sets.map(existingSet => existingSet._id === updatedSet._id ? updatedSet : existingSet));
+            setSetToEdit(null);
+          }}
+        />
+      )}
+    </div>
+  </div>
+</div>
+
     );
   }
 

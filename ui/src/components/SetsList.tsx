@@ -41,14 +41,15 @@ export const SetsList: React.FC<SetsListProps> = ({ sets, onDeleteSetClicked, on
 
   return (
     <div>
-      {sortedGroupedSets.map(([date, sets]) => (
-        <div key={date}>
-          <h2 className="text-xl font-bold my-4">{date}</h2>
-          {sets.map(set => <SetItem key={set._id} set={set} onDeleteSetClicked={onDeleteSetClicked}
-           onSetClicked={onSetClicked}/>)}
-        </div>
+  {sortedGroupedSets.map(([date, sets]) => (
+    <div key={date} className="mb-8">
+      <h2 className="text-2xl font-bold my-4">{date}</h2>
+      {sets.map(set => (
+        <SetItem key={set._id} set={set} onDeleteSetClicked={onDeleteSetClicked} onSetClicked={onSetClicked} />
       ))}
     </div>
+  ))}
+</div>
   );
 };
 
