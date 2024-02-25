@@ -38,6 +38,7 @@ export interface UserInput {
     fullName: string,
     age: string,
     weight: string,
+    sex: string,
     bestSquat: string,
     bestBenchPress: string,
     bestDeadlift: string,

@@ -6,6 +6,7 @@ export interface User {
     email: string,
     age?: string,
     weight?: string,
+    sex?: string,
     bestSquat?: string,
     bestBenchPress?: string,
     bestDeadlift?: string,

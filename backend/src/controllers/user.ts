@@ -66,6 +66,7 @@ interface UpdateUserBody{
     fullName?: string,
     age?: number,
     weight?: number,
+    sex?: string,
     bestSquat?: number,
     bestBenchPress?: number,
     bestDeadlift?: number,
@@ -81,6 +82,7 @@ export const UpdateUser: RequestHandler<UpdateUserParams, unknown, UpdateUserBod
     const fullName = req.body.fullName;
     const age = req.body.age;
     const weight = req.body.weight;
+    const sex = req.body.sex;
     const bestSquat = req.body.bestSquat;
     const bestBenchPress = req.body.bestBenchPress;
     const bestDeadlift = req.body.bestDeadlift;
@@ -111,6 +113,7 @@ export const UpdateUser: RequestHandler<UpdateUserParams, unknown, UpdateUserBod
         user.fullName = fullName!;
         user.age = age!;
         user.weight = weight!;
+        user.sex = sex!;
         user.bestSquat = bestSquat!;
         user.bestBenchPress = bestBenchPress!;
         user.bestDeadlift = bestDeadlift!;

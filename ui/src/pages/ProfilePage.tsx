@@ -51,6 +51,7 @@ interface ProfilePageProps {
             <p><strong>Name:</strong> {user!.fullName || "Not provided"}</p>
             <p><strong>Age:</strong> {user!.age || "Not provided"}</p>
             <p><strong>Weight:</strong> {user!.weight ? `${user!.weight} kg` : "Not provided"}</p>
+            <p><strong>Sex:</strong> {user!.sex ? `${user!.sex}` : "Not provided"}</p>
           </div>
           {/* Performance */}
           <div>

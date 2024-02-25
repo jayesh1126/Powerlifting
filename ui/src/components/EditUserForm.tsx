@@ -16,6 +16,7 @@ interface EditUserFormProps {
             fullName: userToEdit?.fullName || "",
             age: userToEdit?.age || "",
             weight: userToEdit?.weight || "",
+            sex: userToEdit?.sex || "",
             bestSquat: userToEdit?.bestSquat || "",
             bestBenchPress: userToEdit?.bestBenchPress || "",
             bestDeadlift: userToEdit?.bestDeadlift || "",
@@ -68,6 +69,13 @@ interface EditUserFormProps {
                 className="mt-2 p-2 border rounded-md w-full"
                 required
                 {...register("weight")}
+              />
+              <input
+                type="text"
+                placeholder="Sex"
+                className="mt-2 p-2 border rounded-md w-full"
+                required
+                {...register("sex")}
               />
               <input
                 type="number"

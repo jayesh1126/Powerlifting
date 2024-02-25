@@ -7,6 +7,7 @@ const userSchema = new Schema({
   password: { type: String, required: true, select: false }, // if not using OAuth exclusively
   age: { type: Number },
   weight: { type: Number }, // Specify units (lbs/kg)
+  sex: { type: String },
   bestSquat: { type: Number },
   bestBenchPress: { type: Number },
   bestDeadlift: { type: Number },
