@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { LockClosedIcon } from '@heroicons/react/20/solid';
 import SignUpForm from '../components/SignUpForm';
 import { useForm } from 'react-hook-form';
-import { LoginCredentials } from '../network/sets_api';
-import * as SetsApi from "../network/sets_api";
+import { LoginCredentials } from '../network/users_api';
+import * as UsersApi from "../network/users_api";
 import { useUser } from '../components/UserContext';
 
 
@@ -18,7 +18,7 @@ const LoginPage = () => {
 
   async function onSubmit(credentials: LoginCredentials){
     try {
-      const user = await SetsApi.login(credentials);
+      const user = await UsersApi.login(credentials);
       setUser(user);
       navigate('/dashboard');
     } catch (error) {

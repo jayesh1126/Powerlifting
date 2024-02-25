@@ -6,7 +6,7 @@ import WorkoutPage from './pages/WorkoutPage';
 import ProfilePage from './pages/ProfilePage'; 
 import { useEffect, useState } from 'react';
 import { User } from './models/user';
-import * as SetsApi from "./network/sets_api";
+import * as UsersApi from "./network/users_api";
 import { UserProvider } from './components/UserContext';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     async function fetchLoggedInUser() {
       try {
-        const user = await SetsApi.getLoggedInUser();
+        const user = await UsersApi.getLoggedInUser();
         setLoggedinUser(user);
       } catch (error) {
         console.error(error);

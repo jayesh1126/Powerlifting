@@ -1,7 +1,7 @@
 import { User } from "../models/user";
 import { useForm } from 'react-hook-form';
-import { UserInput } from '../network/sets_api';
-import * as SetsApi from "../network/sets_api";
+import { UserInput } from '../network/users_api';
+import * as UsersApi from "../network/users_api";
 
 interface EditUserFormProps {
     userToEdit: User,
@@ -31,7 +31,7 @@ interface EditUserFormProps {
     async function onSubmit(input :UserInput) {
         try {
             let userResponse: User;
-            userResponse = await SetsApi.updateUser(userToEdit._id, input);
+            userResponse = await UsersApi.updateUser(userToEdit._id, input);
             
             onUserSaved(userResponse);
         } catch (error) {

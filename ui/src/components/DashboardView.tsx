@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Set as SetModel } from '../models/set';
 import PBComparisonChart from "./PBComparisonChart";
 import { useUser } from "./UserContext";
@@ -6,6 +6,8 @@ import VolumeOverTimeChart from './VolumeOverTimeChart';
 import { RpeOverTimeChart } from './RpeOverTimeChart';
 import { categories } from '../data/home';
 import { CategoryPills } from './CategoryPills';
+import * as UsersApi from '../network/users_api';
+
 
 
 interface DashboardViewProps {
@@ -17,11 +19,26 @@ interface DashboardViewProps {
 export const DashboardView = ({ sets } : DashboardViewProps) => {
 
   const { user } = useUser();
+  const [rank, setRank] = useState<number | null>(null);
+
 
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   const [timeFrame, setTimeFrame] = useState<'week' | 'month' | 'year'>('week');
 
+
+  useEffect(() => {
+    const rankRequestData: UsersApi.RankRequestData = {
+      total: user && user.bestTotal ? Number(user.bestTotal) : 0,
+      age: user && user.age ? Number(user.age) : 0,
+      weightClass: user && user.weight ? Number(user.weight) : 0,
+      sex: user && user.sex ? (user.sex === 'Male' ? 'M' : 'F') : 'M'
+};
+
+    UsersApi.getUserRank(rankRequestData)
+        .then(rank => setRank(rank))
+        .catch(error => console.error(error));
+},);
 
 // This function filters the sets based on the selected time frame
 const filterSetsByTimeFrame = (timeFrame: 'week' | 'month' | 'year') => {
@@ -149,6 +166,7 @@ const volumeOverTimeData = sortedDates.map((date) => ({
           </div>
   <div className="flex flex-col items-center w-full mb-12">
     <h1 className="text-3xl md:text-4xl font-bold mb-6">Welcome back to your Dashboard, {user!.username}!</h1>
+    {rank !== null ? <p>Your Rank: {rank}</p> : <p>Loading your rank...</p>}
     <div className="w-full sm:w-1/3 lg:w-1/4 xl:w-1/5">
       <select 
         value={timeFrame} 

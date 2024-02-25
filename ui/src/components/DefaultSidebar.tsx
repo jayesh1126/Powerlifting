@@ -7,7 +7,7 @@ import {
   Cog6ToothIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
-import * as SetsApi from "../network/sets_api";
+import * as UsersApi from "../network/users_api";
 import { useUser } from './UserContext';
 
 export const DefaultSidebar = () => {
@@ -16,7 +16,7 @@ export const DefaultSidebar = () => {
 
   async function logout() {
     try {
-        await SetsApi.logout();
+        await UsersApi.logout();
         setUser(undefined);
         navigate('/');
     } catch (error) {

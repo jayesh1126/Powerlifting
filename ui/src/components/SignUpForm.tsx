@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { SignUpCredentials } from "../network/sets_api";
-import * as SetsApi from "../network/sets_api";
+import { SignUpCredentials } from "../network/users_api";
+import * as UsersApi from "../network/users_api";
 import { User } from "../models/user";
 
 interface SignUpFormProps {
@@ -14,7 +14,7 @@ const SignUpForm = ({onDismiss, onSignupSuccessful}: SignUpFormProps) => {
 
     async function onSubmit(credentials: SignUpCredentials){
         try {
-            const newUser = await SetsApi.signUp(credentials);
+            const newUser = await UsersApi.signUp(credentials);
             onSignupSuccessful(newUser);
         } catch (error) {
             alert(error);
