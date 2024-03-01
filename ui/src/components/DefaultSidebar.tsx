@@ -4,7 +4,6 @@ import { Card, Typography, List, ListItem } from "@material-tailwind/react";
 import {
   PresentationChartBarIcon,
   UserCircleIcon,
-  Cog6ToothIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
 import * as UsersApi from "../network/users_api";
@@ -38,38 +37,32 @@ export const DefaultSidebar = () => {
   }
 
   return (
-    <Card className="w-64 lg:w-72 xl:w-80 p-4 shadow-xl bg-white">
-      <div className="mb-4 p-4 bg-blue-500 rounded-lg text-white">
+    <Card className="w-64 lg:w-72 xl:w-80 p-4 shadow-xl h-screen">
+      <div className="mb-4 p-4 rounded-lg ">
         <Typography variant="h5" className="font-bold">
           Navigation
         </Typography>
       </div>
-      <List className="divide-y divide-gray-200">
-        <ListItem onClick={handleDashboard} className="hover:bg-blue-100 transition-colors duration-150 ease-in-out">
-          <Link to="/" className="flex items-center text-gray-700">
-            <PresentationChartBarIcon className="h-5 w-5 mr-2 text-blue-500" />
+      <List className="divide-y divide-white">
+        <ListItem onClick={handleDashboard} className="hover: transition-colors duration-150 ease-in-out">
+          <Link to="/" className="flex items-center ">
+            <PresentationChartBarIcon className="h-5 w-5 mr-2 " />
             Dashboard
           </Link>
         </ListItem>
-        <ListItem onClick={handleWorkout} className="hover:bg-blue-100 transition-colors duration-150 ease-in-out">
-          <div className="flex items-center text-gray-700">
-            <UserCircleIcon className="h-5 w-5 mr-2 text-blue-500" />
+        <ListItem onClick={handleWorkout} className="hover: transition-colors duration-150 ease-in-out">
+          <div className="flex items-center ">
+            <UserCircleIcon className="h-5 w-5 mr-2 " />
             Workouts
           </div>
         </ListItem>
-        <ListItem className="hover:bg-blue-100 transition-colors duration-150 ease-in-out">
-          <Link to="/settings" className="flex items-center text-gray-700">
-            <Cog6ToothIcon className="h-5 w-5 mr-2 text-blue-500" />
-            Settings
-          </Link>
-        </ListItem>
-        <ListItem onClick={handleProfile} className="hover:bg-blue-100 transition-colors duration-150 ease-in-out">
-          <Link to="/profile" className="flex items-center text-gray-700">
-            <UserCircleIcon className="h-5 w-5 mr-2 text-blue-500" />
+        <ListItem onClick={handleProfile} className="hover: transition-colors duration-150 ease-in-out">
+          <Link to="/profile" className="flex items-center ">
+            <UserCircleIcon className="h-5 w-5 mr-2 " />
             Profile
           </Link>
         </ListItem>
-        <ListItem onClick={logout} className="cursor-pointer flex items-center text-gray-700 hover:bg-blue-100 transition-colors duration-150 ease-in-out">
+        <ListItem onClick={logout} className="cursor-pointer flex items-center  hover: transition-colors duration-150 ease-in-out">
           <PowerIcon className="h-5 w-5 mr-2 text-red-500" />
           Log Out
         </ListItem>

@@ -160,18 +160,19 @@ const volumeOverTimeData = sortedDates.map((date) => ({
 
 
   return (
-    <div className="container mx-auto px-4 py-8">
-                <div className='flex justify-center p-4'>
-          <CategoryPills categories={categories} selectedCategory={selectedCategory} onSelect={setSelectedCategory} />
-          </div>
-  <div className="flex flex-col items-center w-full mb-12">
-    <h1 className="text-3xl md:text-4xl font-bold mb-6">Welcome back to your Dashboard, {user!.username}!</h1>
-    {rank !== null ? <p>Your Rank: {rank}</p> : <p>Loading your rank...</p>}
-    <div className="w-full sm:w-1/3 lg:w-1/4 xl:w-1/5">
+    <div className="container mx-auto rounded-lg shadow-lg">
+  <div className="flex flex-col items-center w-full mb-4">
+    <h2 className="text-3xl md:text-2xl font-bold mb-4 px-4 md:px-0">Welcome back to your Dashboard, {user!.username}!</h2>
+    <div className='flex justify-center p-1 md:justify-start md:p-2'>
+      <CategoryPills categories={categories} selectedCategory={selectedCategory} onSelect={setSelectedCategory} />
+    </div>
+
+
+    <div className="w-auto py-2">
       <select 
         value={timeFrame} 
         onChange={e => setTimeFrame(e.target.value as 'week')}
-        className="form-select block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-lg"
+        className="block w-64 mx-auto px-3 py-2 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-lg cursor-pointer"
       >
         <option value="week">Last Week</option>
         <option value="month">Last Month</option>
@@ -179,6 +180,16 @@ const volumeOverTimeData = sortedDates.map((date) => ({
       </select>
     </div>
   </div>
+
+  <div className='w-full sm:w-2/5 bg-white border border-gray-200 shadow-lg rounded-lg p-4 mt-3 mx-auto'>
+  <h3 className="text-lg font-semibold">{user!.fullName}</h3>
+  {rank !== null 
+    ? <p className='text-gray-600 '>Current worldwide ranking in 2024: <span className="text-gray-800 font-medium">{rank}</span></p> 
+    : <p className="text-gray-600">Loading your rank...</p>
+  }
+</div>
+
+  
 
   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
     {/* Enhance each card with more padding and subtle shadows for depth */}

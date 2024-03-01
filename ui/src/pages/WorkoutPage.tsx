@@ -52,7 +52,7 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
     };
   
     return (
-      <div className='flex flex-col h-screen overflow-hidden'>
+      <div className='flex flex-col h-screen overflow-hidden' >
   <PageHeader toggleSidebar={toggleSidebar} />
   <div className='flex flex-1 overflow-hidden'>
     {isSidebarOpen && (
@@ -62,7 +62,7 @@ export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
     )}
     <div className='flex-grow overflow-auto p-8'>
       <button 
-        className="mb-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1"
+        className="mb-6 text-white bg-gray-800 hover:bg-black  font-semibold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1"
         onClick={() => setShowSetForm(true)}>
         Add New Set
       </button>

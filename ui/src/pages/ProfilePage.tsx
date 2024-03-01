@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { User } from '../models/user';
-import { UserIcon } from "@heroicons/react/24/solid";
 import DefaultSidebar from '../components/DefaultSidebar';
 import { PageHeader } from '../layouts/PageHeader';
 import EditUserForm from '../components/EditUserForm';
 import { useUser } from '../components/UserContext';
+import profileImage from '../assets/img.webp';
+
 
 interface ProfilePageProps {
-    // To remove null
     loggedInUser: User,
     onLogoutSuccessful: () => void,
   }
@@ -29,53 +29,59 @@ interface ProfilePageProps {
       };
 
       return (
-        <div className='flex flex-col h-screen overflow-hidden'>
-  <PageHeader toggleSidebar={toggleSidebar} />
-  <div className='flex flex-1 overflow-auto'> {/* Adjusted for scrolling */}
-    {isSidebarOpen && (
-      <div className='flex-shrink-0 w-64 lg:w-72 xl:w-80'>
-        <DefaultSidebar />
-      </div>
-    )}
-    <div className="flex-grow p-6">
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center mb-6">
-          <UserIcon className="w-8 h-8 text-gray-700 mr-3" />
-          <h2 className="text-2xl font-bold text-gray-900">Profile</h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
-          {/* User Details */}
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Personal Details</h3>
-            <p><strong>Name:</strong> {user!.fullName || "Not provided"}</p>
-            <p><strong>Age:</strong> {user!.age || "Not provided"}</p>
-            <p><strong>Weight:</strong> {user!.weight ? `${user!.weight} kg` : "Not provided"}</p>
-            <p><strong>Sex:</strong> {user!.sex ? `${user!.sex}` : "Not provided"}</p>
-          </div>
-          {/* Performance */}
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Performance</h3>
-            <p><strong>Squat:</strong> {user!.bestSquat ? `${user!.bestSquat} kg` : "Not provided"}</p>
-            <p><strong>Bench Press:</strong> {user!.bestBenchPress ? `${user!.bestBenchPress} kg` : "Not provided"}</p>
-            <p><strong>Deadlift:</strong> {user!.bestDeadlift ? `${user!.bestDeadlift} kg` : "Not provided"}</p>
-            <p><strong>Total:</strong> {user!.bestTotal ? `${user!.bestTotal} kg` : "Not provided"}</p>
-          </div>
-          {/* Goals */}
-          <div className="col-span-1 md:col-span-2">
-            <h3 className="font-semibold text-lg mb-2">Goals</h3>
-            <p><strong>Squat:</strong> {user!.squatGoal ? `${user!.squatGoal} kg` : "Not provided"}</p>
-            <p><strong>Bench Press:</strong> {user!.benchPressGoal ? `${user!.benchPressGoal} kg` : "Not provided"}</p>
-            <p><strong>Deadlift:</strong> {user!.deadliftGoal ? `${user!.deadliftGoal} kg` : "Not provided"}</p>
-            <p><strong>Total:</strong> {user!.totalGoal ? `${user!.totalGoal} kg` : "Not provided"}</p>
-          </div>
-        </div>
-        <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setUserToEdit(user!)}>
-          Edit Profile
-        </button>
-      </div>
-      {userToEdit &&
+        <div className='  flex flex-col h-screen overflow-hidden'>
+          <PageHeader toggleSidebar={toggleSidebar} />
+          <div className='flex flex-1 overflow-auto'>
+            {isSidebarOpen && (
+              <DefaultSidebar />
+            )}
+            <div className="flex-grow p-6">
+              <div className="max-w-4xl mx-auto">
+                {/* Personal Details Box with colorful background and vibrant button */}
+                <div className="rounded-lg shadow-lg overflow-hidden">
+                  <div className="p-6 flex flex-col md:flex-row items-center">
+                    <img
+                      src={profileImage}
+                      alt={`${user?.fullName}'s profile`}
+                      className="w-32 h-32 rounded-full border-4 border-white mb-4 md:mb-0 md:mr-6"
+                    />
+                    <div>
+                      <h3 className="text-2xl font-semibold mb-2">Personal Details</h3>
+                      <p>Name: {user?.fullName || 'Not provided'}</p>
+                      <p>Age: {user?.age || 'Not provided'}</p>
+                      <p>Weight: {user?.weight ? `${user.weight} kg` : 'Not provided'}</p>
+                      <p>Sex: {user?.sex || 'Not provided'}</p>
+                    </div>
+                  </div>
+                  <button
+                    className="text-white bg-gray-800 hover:bg-black font-bold py-2 px-4 rounded-b-lg w-full"
+                    onClick={() => setUserToEdit(user!)}
+                  >
+                    Edit Profile
+                  </button>
+                </div>
+    
+                {/* Performance and Goals Boxes */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  {/* Performance Box */}
+                  <div className=" rounded-lg shadow p-6">
+                    <h3 className="text-xl font-semibold mb-2">Performance</h3>
+                    <p>Squat: {user?.bestSquat ? `${user.bestSquat} kg` : 'Not provided'}</p>
+                    <p>Bench Press: {user?.bestBenchPress ? `${user.bestBenchPress} kg` : 'Not provided'}</p>
+                    <p>Deadlift: {user?.bestDeadlift ? `${user.bestDeadlift} kg` : 'Not provided'}</p>
+                    <p>Total: {user?.bestTotal ? `${user.bestTotal} kg` : 'Not provided'}</p>
+                  </div>
+    
+                  {/* Goals Box */}
+                  <div className=" rounded-lg shadow p-6">
+                    <h3 className="text-xl font-semibold mb-2">Goals</h3>
+                    <p>Squat: {user?.squatGoal ? `${user.squatGoal} kg` : 'Not provided'}</p>
+                    <p>Bench Press: {user?.benchPressGoal ? `${user.benchPressGoal} kg` : 'Not provided'}</p>
+                    <p>Deadlift: {user?.deadliftGoal ? `${user.deadliftGoal} kg` : 'Not provided'}</p>
+                    <p>Total: {user?.totalGoal ? `${user.totalGoal} kg` : 'Not provided'}</p>
+                  </div>
+                </div>
+                {userToEdit &&
       <EditUserForm
       userToEdit={userToEdit}
       onClose={() => setUserToEdit(null)}
@@ -83,13 +89,12 @@ interface ProfilePageProps {
         handleUserSaved(updatedUser);
         setUserToEdit(null);
       }}/>}
-    </div>
-  </div>
-</div>
-
-      
+              </div>
+            </div>
+          </div>
+        </div>
       );
-    }
+    };
     
     export default ProfilePage;
     

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from "lucide-react";
-import logo from "../assets/logo.svg";
+import logo from '../assets/logo.jpg';
 
 type PageHeaderProps = {
   toggleSidebar: () => void;
@@ -8,11 +8,11 @@ type PageHeaderProps = {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ toggleSidebar }) => {
     return (
-        <div className="bg-white shadow-md p-4">
+        <div className="bg-gray-800 shadow-md p-4">
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center">
                     <button onClick={toggleSidebar} className="text-gray-500 hover:text-gray-700 focus:outline-none mr-4">
-                        <Menu className="h-6 w-6" />
+                        <Menu className="h-6 w-6 text-white" />
                     </button>
                     <a href="/" className="hidden md:block">
                         <img src={logo} alt="Logo" className="h-8" />
@@ -20,7 +20,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ toggleSidebar }) => {
                 </div>
 
                 {/* Centered title with flex-grow to ensure it centers */}
-                <h1 className="flex-grow text-xl text-center text-gray-800 font-semibold">
+                <h1 className="flex-grow text-xl text-center text-white font-semibold">
                     Powerlifting Performance Analytics Dashboard
                 </h1>
 

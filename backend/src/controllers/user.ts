@@ -135,11 +135,14 @@ export const UpdateUser: RequestHandler<UpdateUserParams, unknown, UpdateUserBod
 interface LoginBody {
     username?: string,
     password?: string,
+    rememberMe?: boolean,
+
 }
 
 export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
     const username = req.body.username;
     const password = req.body.password;
+    const rememberMe = req.body.rememberMe;
     
     try {
         if (!username || !password) {
@@ -156,6 +159,13 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
 
         if (!passwordMatch) {
             throw createHttpError(401, "Invalid credentials");
+        }
+
+        if (rememberMe) {
+            // Extend MaxAge for cookie to 7 days
+            req.session.cookie.maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+        } else{
+            req.session.cookie.maxAge = 60 * 60 * 1000; // 1 hour in milliseconds
         }
 
         req.session.userId = user._id;
