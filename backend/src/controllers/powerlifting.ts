@@ -1,6 +1,5 @@
 import { RequestHandler } from 'express';
 import { calculateRanking } from '../util/rankingCalculator';
-import { calculateOneRepMax, SetData, calculateAverageOneRepMax } from '../util/oneRepMaxCalculator';
 
 export const getUserRanking: RequestHandler = async (req, res, next) => {
     try {
@@ -22,54 +21,3 @@ export const getUserRanking: RequestHandler = async (req, res, next) => {
     }
 };
 
-export const getOneRepMax: RequestHandler = async (req, res, next) => {
-    try {
-        // Extract user data from query parameters and ensure types are correct
-        const weight = req.query.weight as string;
-        const repetitions = req.query.repetitions as string;
-        const rpe = req.query.rpe as string;
-
-        // Convert and validate the extracted values
-        const weightNum = parseFloat(weight);
-        const repetitionsNum = parseInt(repetitions, 10);
-        const rpeNum = parseFloat(rpe);
-
-        // Check if any of the values are NaN (not a number) or undefined after conversion
-        if (isNaN(weightNum) || isNaN(repetitionsNum) || isNaN(rpeNum)) {
-            return res.status(400).json({ error: 'Invalid input data' });
-        }
-
-        // Create a SetData object to pass to the calculateOneRepMax function
-        const setData: SetData = {
-            weight,
-            repetitions,
-            rpe
-        };
-
-        // Await the calculation result
-        const oneRepMax = await calculateOneRepMax(setData);
-        
-        // Send the result in the response
-        res.status(200).json({ oneRepMax });
-    } catch (error) {
-        next(error);
-    }
-};
-
-export const getAverageOneRepMax: RequestHandler = async (req, res, next) => {
-    try {
-        // console.log(req.body); // Log the incoming request body to inspect the format.
-        const userSets: SetData[] = req.body;
-        const averageResult = await calculateAverageOneRepMax(userSets);
-
-        // Check if the result is a number and send the response
-        if (typeof averageResult === 'number') {
-            res.status(200).json({ averageOneRepMax: averageResult });
-        } else {
-            // If the result is an error message, handle accordingly
-            res.status(400).json({ error: averageResult });
-        }
-    } catch (error) {
-        next(error);
-    }
-}
