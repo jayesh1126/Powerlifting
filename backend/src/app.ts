@@ -9,6 +9,9 @@ import env from "./util/validateEnv"
 import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
 import powerliftingRoutes from "./routes/powerliftingRoutes";
+import authRoutes from './routes/authRoutes';
+import "./util/passport-setup";
+import passport from 'passport';
 
 const app = express();
 
@@ -30,9 +33,14 @@ app.use(session({
     }),
 }));
 
+// Initialize Passport and restore authentication state, if any, from the session.
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use("/api/users", userRoutes);
 app.use("/api/sets", requiresAuth, setRoutes);
 app.use('/api/powerlifting', powerliftingRoutes);
+app.use('/auth', authRoutes);
 
 
 app.use((req, res, next) => {

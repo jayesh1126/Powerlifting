@@ -7,11 +7,12 @@ import mongoose from "mongoose";
 
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
     try {
-
-        const user = await UserModel.findById(req.session.userId).select("+email").exec();
+        const user = req.user ? req.user : await UserModel.findById(req.session.userId).select("+email").exec();
+        // console.log(req.session);
         res.status(200).json(user);
 
     } catch (error) {
+        // console.log(req.session);
         next(error);
     }
 }
@@ -91,7 +92,7 @@ export const UpdateUser: RequestHandler<UpdateUserParams, unknown, UpdateUserBod
     const benchPressGoal = req.body.benchPressGoal;
     const deadliftGoal = req.body.deadliftGoal;
     const totalGoal = req.body.totalGoal;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.user ? req.user : req.session.userId;
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -106,7 +107,7 @@ export const UpdateUser: RequestHandler<UpdateUserParams, unknown, UpdateUserBod
             throw createHttpError(404, "User not found")
         }
         
-        if (!user._id.equals(authenticatedUserId)) {
+        if (!user._id.toString() === (authenticatedUserId)) {
             throw createHttpError(401, "You cannot access this user");
         }
 
@@ -155,7 +156,7 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
             throw createHttpError(401, "Invalid credentials");
         }
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, user.password!);
 
         if (!passwordMatch) {
             throw createHttpError(401, "Invalid credentials");

@@ -4,7 +4,7 @@ const userSchema = new Schema({
   fullName: { type: String},
   username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true, select:false },
-  password: { type: String, required: true, select: false }, // if not using OAuth exclusively
+  password: { type: String, required: false, select: false }, // if not using OAuth exclusively
   age: { type: Number },
   weight: { type: Number }, // Specify units (lbs/kg)
   sex: { type: String },
@@ -17,8 +17,6 @@ const userSchema = new Schema({
   deadliftGoal: { type: Number },
   totalGoal: { type: Number },
   googleId: { type: String }, // Store Google ID if using Google OAuth
-  accessToken: { type: String },
-  refreshToken: { type: String },
 });
 
 type User = InferSchemaType<typeof userSchema>;

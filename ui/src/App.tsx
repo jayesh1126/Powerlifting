@@ -19,6 +19,7 @@ function App() {
       try {
         const user = await UsersApi.getLoggedInUser();
         setLoggedinUser(user);
+        // console.log(user);
       } catch (error) {
         console.error(error);
       } finally {

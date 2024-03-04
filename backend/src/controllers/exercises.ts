@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getSets: RequestHandler = async (req, res, next) => {
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.user ? req.user : req.session.userId;
     
     try{
         assertIsDefined(authenticatedUserId);
@@ -20,7 +20,7 @@ export const getSets: RequestHandler = async (req, res, next) => {
 
 export const getSet: RequestHandler = async(req, res, next) =>{
     const setId = req.params.setId;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.user ? req.user : req.session.userId;
 
 
     try {
@@ -37,7 +37,7 @@ export const getSet: RequestHandler = async(req, res, next) =>{
             throw createHttpError(404, "Set not found")
         }
 
-        if (!set.userId.equals(authenticatedUserId)) {
+        if (!set.userId.toString() === (authenticatedUserId)) {
             throw createHttpError(401, "You cannot access this set");
         }
         res.status(200).json(set);        
@@ -62,7 +62,7 @@ export const createSet: RequestHandler<unknown, unknown, CreateSetBody, unknown>
     const repetitions = req.body.repetitions;
     const rpe = req.body.rpe;
     const date = req.body.date;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.user ? req.user : req.session.userId;
 
 
     try {
@@ -102,7 +102,7 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
     const newRepetitions = req.body.repetitions;
     const newRpe = req.body.rpe;
     const newDate = req.body.date;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.user ? req.user : req.session.userId;
 
     
     try {
@@ -118,7 +118,7 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
             throw createHttpError(404, "Set not found")
         }
 
-        if (!set.userId.equals(authenticatedUserId)) {
+        if (!set.userId.toString() === (authenticatedUserId)) {
             throw createHttpError(401, "You cannot access this set");
         }
 
@@ -139,7 +139,7 @@ export const updateSet: RequestHandler<UpdateSetParams, unknown, UpdateSetBody, 
 
 export const deleteSet: RequestHandler = async(req, res, next) => {
     const setId = req.params.setId;
-    const authenticatedUserId = req.session.userId;
+    const authenticatedUserId = req.user ? req.user : req.session.userId;
 
     try {
         assertIsDefined(authenticatedUserId);
@@ -152,7 +152,7 @@ export const deleteSet: RequestHandler = async(req, res, next) => {
          if(!set) {
             throw createHttpError(404, "Set not found")
         }
-        if (!set.userId.equals(authenticatedUserId)) {
+        if (!set.userId.toString() === (authenticatedUserId)) {
             throw createHttpError(401, "You cannot access this set");
         }
 

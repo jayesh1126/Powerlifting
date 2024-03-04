@@ -7,7 +7,7 @@ import { LoginCredentials } from '../network/users_api';
 import * as UsersApi from "../network/users_api";
 import { useUser } from '../components/UserContext';
 import background  from '../assets/background.jpg'
-// import { GoogleLoginButton } from 'react-social-login-buttons';
+import { GoogleLoginButton } from 'react-social-login-buttons';
 
 
 
@@ -37,9 +37,9 @@ const LoginPage = () => {
             Sign in to Powerlifting Performance Analytics
           </h2>
         </div>
-        {/* <div className="mt-6">
-            <GoogleLoginButton onClick={() => console.log("Login with Google")} />
-        </div> */}
+        <div className="mt-6">
+            <GoogleLoginButton onClick={() => window.location.href = 'http://localhost:5000/auth/google'} />
+        </div>
         <div></div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
       <input type="hidden" name="remember" defaultValue="true" />
@@ -78,8 +78,8 @@ const LoginPage = () => {
 
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              <input id="rememberMe" name="rememberMe" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+              <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
                 Remember me
               </label>
             </div>
