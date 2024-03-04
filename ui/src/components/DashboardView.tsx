@@ -4,7 +4,6 @@ import PBComparisonChart from "./PBComparisonChart";
 import { useUser } from "./UserContext";
 import VolumeOverTimeChart from './VolumeOverTimeChart';
 import { RpeOverTimeChart } from './RpeOverTimeChart';
-import { categories } from '../data/home';
 import { CategoryPills } from './CategoryPills';
 import * as UsersApi from '../network/users_api';
 
@@ -17,6 +16,22 @@ interface DashboardViewProps {
 
 
 export const DashboardView = ({ sets } : DashboardViewProps) => {
+
+  // Function to extract unique exercise names for categories
+function extractUniqueExercises(sets: SetModel[]): string[] {
+  const uniqueExercises = new Set<string>();
+
+  uniqueExercises.add("All");
+  
+  sets.forEach(set => {
+      uniqueExercises.add(set.exerciseName);
+  });
+
+  // Convert the Set to an array for further processing or return
+  return Array.from(uniqueExercises);
+}
+const categories = extractUniqueExercises(sets);
+
 
   const { user } = useUser();
   const [rank, setRank] = useState<number | null>(null);
@@ -197,7 +212,6 @@ useEffect(() => {
 }, [squatOneRepMaxSets, benchOneRepMaxSets, deadliftOneRepMaxSets]); // Re-run the effect if the 'sets' prop changes
 
 
-
 // Function to filter sets by the selected category
 const filterSetsByCategory = (sets: SetModel[], selectedCategory: string) => {
   if (selectedCategory === "All"){
@@ -244,6 +258,17 @@ const categoryFilteredSets = filterSetsByCategory(timeFilteredSets, selectedCate
 const squatVolumeData = calculateVolumeByDate(categoryFilteredSets, 'Squat');
 const benchPressVolumeData = calculateVolumeByDate(categoryFilteredSets, 'Bench Press');
 const deadliftVolumeData = calculateVolumeByDate(categoryFilteredSets, 'Deadlift');
+// console.log(deadliftVolumeData);
+
+  let selectedExerciseVolumeData: any[] = [];
+
+if (selectedCategory !== "Squat" && selectedCategory !== "Bench Press" && selectedCategory !== "Deadlift"
+&& selectedCategory !== "All") {
+   selectedExerciseVolumeData = calculateVolumeByDate(categoryFilteredSets, selectedCategory);
+  // console.log(categoryFilteredSets[0].exerciseName === selectedCategory);
+}
+// console.log(selectedExerciseVolumeData);
+
 // console.log(squatVolumeData);
 // console.log(benchPressVolumeData);
 
@@ -252,6 +277,7 @@ const allDates = new Set([
   ...squatVolumeData.map((data) => data.date),
   ...benchPressVolumeData.map((data) => data.date),
   ...deadliftVolumeData.map((data) => data.date),
+  ...selectedExerciseVolumeData.map((data) => data.date),
 ]);
 
 // Convert the Set back to an array and sort dates if needed
@@ -263,10 +289,9 @@ const volumeOverTimeData = sortedDates.map((date) => ({
   squatVolume: squatVolumeData.find((squat) => squat.date === date)?.volume || 0,
   benchPressVolume: benchPressVolumeData.find((bp) => bp.date === date)?.volume || 0,
   deadliftVolume: deadliftVolumeData.find((dl) => dl.date === date)?.volume || 0,
-
-  
+  selectedExerciseVolume: selectedExerciseVolumeData.find((dl) => dl.date === date)?.volume || 0,
 }));
-
+// console.log(volumeOverTimeData);
 
 
 // Data for the RPE per date chart
@@ -297,7 +322,7 @@ const volumeOverTimeData = sortedDates.map((date) => ({
 
 
   return (
-    <div className="container mx-auto rounded-lg shadow-lg">
+    <div className="container mx-auto rounded-lg shadow-lg overflow-hidden">
   <div className="flex flex-col items-center w-full mb-4">
     <h2 className="text-3xl md:text-2xl font-bold mb-4 px-4 md:px-0">Welcome back to your Dashboard, {user!.username}!</h2>
     <div className='flex justify-center p-1 md:justify-start md:p-2'>
