@@ -1,12 +1,13 @@
 import { InferSchemaType, Schema, model } from "mongoose";
 
+// Schema for my user type
 const userSchema = new Schema({
   fullName: { type: String},
   username: { type: String, unique: true, required: true },
   email: { type: String, unique: true, required: true, select:false },
-  password: { type: String, required: false, select: false }, // if not using OAuth exclusively
+  password: { type: String, required: false, select: false }, // required false since we can log in using google
   age: { type: Number },
-  weight: { type: Number }, // Specify units (lbs/kg)
+  weight: { type: Number },
   sex: { type: String },
   bestSquat: { type: Number },
   bestBenchPress: { type: Number },

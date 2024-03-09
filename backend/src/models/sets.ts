@@ -1,5 +1,6 @@
 import { InferSchemaType, Schema, model } from "mongoose";
 
+// Schema for my Set type
 const setsSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true},
   exerciseName: {type: String, required: true},
