@@ -19,7 +19,7 @@ export const useUser = () => {
 interface UserProviderProps {
   user: User | undefined;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
-  children: ReactNode; // Type for children prop
+  children: ReactNode;
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ user, setUser, children }) => {

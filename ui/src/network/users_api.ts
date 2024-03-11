@@ -6,8 +6,8 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
         return response;
     } else {
         const errorBody = await response.json();
-        const errorMessage = errorBody.error;
-        throw Error(errorMessage);
+        const errorMessage = errorBody.error || 'An unexpected error occured';
+        throw new Error(errorMessage);
     }
 }
 
@@ -33,8 +33,8 @@ export async function getUserRank(data: RankRequestData): Promise<number> {
     }).toString();
 
     const response = await fetchData(`/api/powerlifting/user-ranking?${queryParams}`, { method: "GET" });
-    const responseData = await response.json(); // Make sure to await the json parsing
-    return responseData.ranking; // Assuming the backend sends an object with a 'ranking' key
+    const responseData = await response.json(); 
+    return responseData.ranking;
 }
 
 

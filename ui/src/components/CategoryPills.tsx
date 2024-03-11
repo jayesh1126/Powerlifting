@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "./Button";
+import { Button } from "./YoutubeButton";
 import { useEffect, useRef, useState } from "react";
 
 type CategoryPillsProps = {
@@ -12,8 +12,8 @@ const TRANSLATE_AMOUNT = 200
 
 export function CategoryPills({ categories, selectedCategory, onSelect }: CategoryPillsProps){
 
-    const [isLeftVisible, setIsLeftVisible] = useState(false)
-    const [isRightVisible, setIsRightvisible] = useState(false)
+    const [isLeftVisible, setIsLeftVisible] = useState(true)
+    const [isRightVisible, setIsRightvisible] = useState(true)
     const [translate, setTranslate] = useState(0)
     const containerRef = useRef<HTMLDivElement>(null)
 

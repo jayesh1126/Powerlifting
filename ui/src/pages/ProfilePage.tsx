@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
 import { User } from '../models/user';
-import DefaultSidebar from '../components/DefaultSidebar';
+import DefaultSidebar from '../components/Sidebar';
 import { PageHeader } from '../layouts/PageHeader';
 import EditUserForm from '../components/EditUserForm';
 import { useUser } from '../components/UserContext';
 import profileImage from '../assets/img.webp';
 
-
-interface ProfilePageProps {
-    loggedInUser: User,
-    onLogoutSuccessful: () => void,
-  }
-
-  export const ProfilePage = ({loggedInUser, onLogoutSuccessful} : ProfilePageProps) => {
+  export const ProfilePage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
 
     const { user, setUser } = useUser();
     
@@ -37,7 +30,7 @@ interface ProfilePageProps {
             )}
             <div className="flex-grow p-6">
               <div className="max-w-4xl mx-auto">
-                {/* Personal Details Box with colorful background and vibrant button */}
+                {/* Personal Details Box */}
                 <div className="rounded-lg shadow-lg overflow-hidden">
                   <div className="p-6 flex flex-col md:flex-row items-center">
                     <img

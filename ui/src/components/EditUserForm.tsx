@@ -35,8 +35,8 @@ interface EditUserFormProps {
             
             onUserSaved(userResponse);
         } catch (error) {
-            console.error(error);
-            alert(error);
+          console.error('Failed to update user:', error);
+          alert('An error occurred while updating your information. Please try again.');
         }
     }
 
@@ -48,11 +48,13 @@ interface EditUserFormProps {
       <h3 className="text-lg leading-6 font-medium text-gray-900">
         Edit User
       </h3>
+      {/* Form */}
       <form className="mt-2 grid grid-cols-1 gap-4 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
+
+        {/* Div for Full name */}
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700">Full Name</label>
           <input
-            id="fullName"
             type="text"
             placeholder="Full Name"
             className="mt-1 p-2 border rounded-md w-full"
@@ -60,127 +62,158 @@ interface EditUserFormProps {
             {...register("fullName")}
           />
         </div>
+
+        {/* Div for Age */}
         <div>
-          <label htmlFor="age" className="block text-sm font-medium text-gray-700">Age</label>
-          <input
-            id="age"
-            type="number"
-            placeholder="Age"
-            className="mt-1 p-2 border rounded-md w-full"
-            required
-            {...register("age")}
-          />
-        </div>
+        <label className="block text-sm font-medium text-gray-700">Age</label>
+        <input
+          type="number"
+          className="mt-1 p-2 border rounded-md w-full"
+          required
+          {...register("age", { min: 0, max: 130 })}
+        />
+      </div>
+
+      {/* Div for Weight */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
+        <input
+          type="text"
+          pattern="^[1-9]\d*(\.\d+)?$"
+          placeholder="Current Bodyweight"
+          title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
+          className="mt-1 p-2 border rounded-md w-full"
+          required
+          {...register("weight", { min: 0 })}
+        />
+      </div>
+
+      {/* Div for Sex */}
         <div>
-          <label htmlFor="weight" className="block text-sm font-medium text-gray-700">Weight</label>
-          <input
-            id="weight"
-            type="text" // Changed to text to allow floats
-            placeholder="Weight"
-            className="mt-1 p-2 border rounded-md w-full"
-            required
-            {...register("weight")}
-          />
-        </div>
-        <div>
-          <label htmlFor="sex" className="block text-sm font-medium text-gray-700">Sex</label>
-          <input
-            id="sex"
-            type="text"
-            placeholder="Sex"
-            className="mt-1 p-2 border rounded-md w-full"
-            required
-            {...register("sex")}
-          />
-        </div>
+        <label className="block text-sm font-medium text-gray-700">Sex</label>
+        <select
+          className="mt-1 p-2 border rounded-md w-full"
+          required
+          {...register("sex")}
+        >
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+
+      {/* Div for best Squat */}
         <div>
           <label htmlFor="bestSquat" className="block text-sm font-medium text-gray-700">Best Squat</label>
           <input
-            id="bestSquat"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Best Squat"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("bestSquat")}
           />
         </div>
+
+        {/* Div for best Bench */}
         <div>
-          <label htmlFor="bestBenchPress" className="block text-sm font-medium text-gray-700">Best Bench Press</label>
+          <label className="block text-sm font-medium text-gray-700">Best Bench Press</label>
           <input
-            id="bestBenchPress"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Best Bench"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("bestBenchPress")}
           />
         </div>
+
+        {/* Div for best Deadlift */}
         <div>
-          <label htmlFor="bestDeadlift" className="block text-sm font-medium text-gray-700">Best Deadlift</label>
+          <label className="block text-sm font-medium text-gray-700">Best Deadlift</label>
           <input
-            id="bestDeadlift"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Best Deadlift"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("bestDeadlift")}
           />
         </div>
+
+        {/* Div for best Total */}
         <div>
-          <label htmlFor="bestTotal" className="block text-sm font-medium text-gray-700">Best Total</label>
+          <label className="block text-sm font-medium text-gray-700">Best Total</label>
           <input
-            id="bestTotal"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Best Total"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("bestTotal")}
           />
         </div>
+
+        {/* Div for Squat goal */}
         <div>
-          <label htmlFor="squatGoal" className="block text-sm font-medium text-gray-700">Squat Goal</label>
+          <label className="block text-sm font-medium text-gray-700">Squat Goal</label>
           <input
-            id="squatGoal"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Squat Goal"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("squatGoal")}
           />
         </div>
+
+        {/* Div for Bench goal */}
         <div>
-          <label htmlFor="benchPressGoal" className="block text-sm font-medium text-gray-700">Bench Press Goal</label>
+          <label className="block text-sm font-medium text-gray-700">Bench Press Goal</label>
           <input
-            id="benchPressGoal"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Bench Goal"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("benchPressGoal")}
           />
         </div>
+
+        {/* Div for Deadlift goal */}
         <div>
-          <label htmlFor="deadliftGoal" className="block text-sm font-medium text-gray-700">Deadlift Goal</label>
+          <label className="block text-sm font-medium text-gray-700">Deadlift Goal</label>
           <input
-            id="deadliftGoal"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Deadlift Goal"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("deadliftGoal")}
           />
         </div>
+
+        {/* Div for Total goal */}
         <div>
-          <label htmlFor="totalGoal" className="block text-sm font-medium text-gray-700">Total Goal</label>
+          <label className="block text-sm font-medium text-gray-700">Total Goal</label>
           <input
-            id="totalGoal"
-            type="text" // Changed to text to allow floats
+            type="text"
             placeholder="Total Goal"
+            pattern="^[1-9]\d*(\.\d+)?$"
+            title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
             className="mt-1 p-2 border rounded-md w-full"
             required
             {...register("totalGoal")}
           />
         </div>
+
+        {/* Buttons */}
         <div className="md:col-span-2">
           <button
             type="submit"

@@ -58,7 +58,6 @@ export const SetsList: React.FC<SetsListProps> = ({ sets, onDeleteSetClicked, on
             </thead>
             <tbody>
               {sets.map(set => (
-                // SetItem component will need to be updated to render <tr> elements
                 <SetItem key={set._id} set={set} onDeleteSetClicked={onDeleteSetClicked} onSetClickedEdit={onSetClickedEdit} onSetClickedCopy={onSetClickedCopy} />
               ))}
             </tbody>

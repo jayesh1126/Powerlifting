@@ -19,12 +19,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ toggleSidebar }) => {
                     </a>
                 </div>
 
-                {/* Centered title with flex-grow to ensure it centers */}
                 <h1 className="flex-grow text-xl text-center text-white font-semibold">
                     Powerlifting Performance Analytics Dashboard
                 </h1>
 
-                {/* Invisible spacer element to balance the flex layout */}
                 <div className="flex items-center opacity-0">
                     <Menu className="h-6 w-6" />
                 </div>

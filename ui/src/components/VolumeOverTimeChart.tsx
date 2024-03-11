@@ -4,15 +4,15 @@ import {
 
 
 interface VolumeDataPoint {
-  date: string; // Date of the workout
-  squatVolume: number; // Total squat volume
-  benchPressVolume: number; // Total bench press volume
-  deadliftVolume: number; // Total deadlift volume
-  selectedExerciseVolume: number; // Total volume for selected exercise
+  date: string;
+  squatVolume: number; 
+  benchPressVolume: number;
+  deadliftVolume: number;
+  selectedExerciseVolume: number;
 }
 
 interface VolumeOverTimeChartProps {
-  data: VolumeDataPoint[]; // Array of data points for the chart
+  data: VolumeDataPoint[];
 }
 
 export const VolumeOverTimeChart = ({ data }: VolumeOverTimeChartProps) => (
@@ -20,7 +20,7 @@ export const VolumeOverTimeChart = ({ data }: VolumeOverTimeChartProps) => (
     <LineChart data={data}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="date" />
-      <YAxis />
+      <YAxis domain={['dataMin', 'dataMax']} />
       <Tooltip />
       <Legend />
       <Line type="monotone" dataKey="squatVolume" stroke="#8884d8" name="Squat Volume" />

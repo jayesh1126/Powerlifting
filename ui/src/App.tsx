@@ -1,4 +1,3 @@
-// App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage'; 
@@ -11,19 +10,19 @@ import { UserProvider } from './components/UserContext';
 
 function App() {
   
-  const [loggedInUser, setLoggedinUser] = useState<User|undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const [loggedInUser, setLoggedInUser] = useState<User|undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchLoggedInUser() {
       try {
         const user = await UsersApi.getLoggedInUser();
-        setLoggedinUser(user);
+        setLoggedInUser(user);
         // console.log(user);
       } catch (error) {
         console.error(error);
       } finally {
-        setIsLoading(false); // Set loading to false after the fetch operation
+        setIsLoading(false);
       }
     }
     fetchLoggedInUser();
@@ -39,19 +38,17 @@ function App() {
   }
   
   return (
-    <UserProvider user={loggedInUser} setUser={setLoggedinUser}>
+    <UserProvider user={loggedInUser} setUser={setLoggedInUser}>
       <Router>
         <Routes>
-          <Route path="/" element={loggedInUser ? <DashboardPage onLogoutSuccessful={() => setLoggedinUser(undefined)} /> :
+          <Route path="/" element={loggedInUser ? <DashboardPage /> :
           <LoginPage/>} />
-          <Route path="/dashboard" element={loggedInUser ? <DashboardPage onLogoutSuccessful={() => setLoggedinUser(undefined)}/>:
+          <Route path="/dashboard" element={loggedInUser ? <DashboardPage/>:
           <LoginPage/>} />
-          <Route path="/workouts" element={loggedInUser ?<WorkoutPage onLogoutSuccessful={() => setLoggedinUser(undefined)}/>:
+          <Route path="/workouts" element={loggedInUser ?<WorkoutPage/>:
           <LoginPage/>} />
-          <Route path="/profile" element={loggedInUser ?<ProfilePage loggedInUser={loggedInUser}
-          onLogoutSuccessful={() => setLoggedinUser(undefined)}/>:
+          <Route path="/profile" element={loggedInUser ?<ProfilePage/>:
           <LoginPage/>} />
-          {/* Add more routes as needed */}
         </Routes>
       </Router>
     </UserProvider>

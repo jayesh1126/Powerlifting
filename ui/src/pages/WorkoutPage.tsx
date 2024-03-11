@@ -1,33 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../layouts/PageHeader';
-import { DefaultSidebar } from '../components/DefaultSidebar';
+import { DefaultSidebar } from '../components/Sidebar';
 import { Set } from '../models/set';
 import { SetsList } from '../components/SetsList';
 import * as SetsApi from "../network/sets_api";
 import AddEditSetForm from '../components/AddEditSetForm';
 
-interface WorkoutPageProps {
-  onLogoutSuccessful: () => void,
-}
 
-export const WorkoutPage = ({ onLogoutSuccessful } : WorkoutPageProps) => {
+export const WorkoutPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sets, setSets] = useState<Set[]>([]);
     const [showAddSetForm, setShowSetForm] = useState(false);
     const [setToEdit, setSetToEdit] = useState<Set|null>(null);
     const [setToCopy, setSetToCopy] = useState<Set|null>(null);
     const [setsLoading, setSetsLoading] = useState(true);
-    const [showSetLoadingError, SetShowSetLoadingError] = useState(false);
+    const [showSetLoadingError, setShowSetLoadingError] = useState(false);
     useEffect(() => {
         async function loadSets() {
             try {
-                SetShowSetLoadingError(false);
+                setShowSetLoadingError(false);
                 setSetsLoading(true);
                 const sets = await SetsApi.fetchSets();
                 setSets(sets);
             } catch (error) {
                 console.error(error);
-                SetShowSetLoadingError(true);
+                setShowSetLoadingError(true);
             } finally {
               setSetsLoading(false)
             }

@@ -17,6 +17,8 @@ const LoginPage = () => {
   const [showSignUp, setShowSignUp] = useState(false);
 
   const { setUser } = useUser();
+  const [loginError, setLoginError] = useState('');
+
 
   async function onSubmit(credentials: LoginCredentials){
     try {
@@ -24,7 +26,7 @@ const LoginPage = () => {
       setUser(user);
       navigate('/dashboard');
     } catch (error) {
-      alert(error);
+      setLoginError('Failed to login. Please check your credentials and try again.');
       console.error(error);
     }
   }
@@ -74,6 +76,7 @@ const LoginPage = () => {
           />
           {errors.password && <span className="text-red-600">This field is required</span>}
         </div>
+        
       </div>
 
           <div className="flex items-center justify-between">
@@ -86,6 +89,7 @@ const LoginPage = () => {
           </div>
 
           <div>
+          {loginError && <div className="text-red-500 text-center">{loginError}</div>}
             <button
               type="submit"
               disabled={isSubmitting}

@@ -12,6 +12,8 @@ interface AddEditSetFormProps {
   
   
   const AddEditSetForm = ({setToEdit, setToCopy, onClose, onSetSaved}: AddEditSetFormProps) => {
+    
+    // If it is edit, the form will be filled in with the set's data
     const {register, handleSubmit, formState: { isSubmitting} } = useForm<SetInput>({
       defaultValues:{
         exerciseName: setToEdit?.exerciseName || setToCopy?.exerciseName || "",
@@ -22,6 +24,7 @@ interface AddEditSetFormProps {
       }
     });
 
+    // On Submit function
     async function onSubmit(input: SetInput){
         try {
           let setResponse: Set;
@@ -33,7 +36,8 @@ interface AddEditSetFormProps {
           onSetSaved(setResponse);
         } catch (error) {
             console.error(error);
-            alert(error);            
+            // Raw error is not displayed to the user.
+            alert("An error occured while saving the set");            
         }
     }
 
@@ -44,6 +48,7 @@ interface AddEditSetFormProps {
                     {setToEdit ? "Edit Set" : "Add Set"}
                 </h3>
                 <form className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
+                    {/* Exercise Name Input */}
                     <label className="block">
                         <span className="text-gray-700">Exercise Name</span>
                         <input
@@ -54,35 +59,39 @@ interface AddEditSetFormProps {
                             {...register("exerciseName")}
                         />
                         <datalist id="exercise-names">
-                            {/* Add your exercise options here */}
                             <option value="Squat" />
                             <option value="Deadlift" />
                             <option value="Bench Press" />
-                            {/* etc... */}
                         </datalist>
                     </label>
+
+                    {/* Weight input */}
                     <label className="block">
                         <span className="text-gray-700">Weight (kg)</span>
                         <input
                             type="text"
-                            pattern="\d+(\.\d+)?"
+                            pattern="^[1-9]\d*(\.\d+)?$"
                             title="Please enter a valid weight in kg (e.g., 75 or 75.5)"
                             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                             required
                             {...register("weight")}
                         />
                     </label>
+                    
+                    {/* Repetitions Input */}
                     <label className="block">
                         <span className="text-gray-700">Repetitions</span>
                         <input
                             type="text"
-                            pattern="\d+(\.\d+)?"
+                            pattern="^\d+$"
                             title="Please enter the number of repetitions (e.g., 8 or 8.5)"
                             className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                             required
                             {...register("repetitions")}
                         />
                     </label>
+
+                    {/* RPE Input */}
                     <label className="block">
                         <span className="text-gray-700">RPE (1-10)</span>
                         <input
@@ -94,6 +103,8 @@ interface AddEditSetFormProps {
                             {...register("rpe")}
                         />
                     </label>
+
+                    {/* Date Input */}
                     <label className="block">
                         <span className="text-gray-700">Date</span>
                         <input
@@ -103,6 +114,8 @@ interface AddEditSetFormProps {
                             {...register("date")}
                         />
                     </label>
+
+                    {/* Submit or Close options */}
                     <div className="flex items-center justify-between gap-4">
                         <button
                             type="submit"

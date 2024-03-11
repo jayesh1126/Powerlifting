@@ -6,8 +6,8 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
         return response;
     } else {
         const errorBody = await response.json();
-        const errorMessage = errorBody.error;
-        throw Error(errorMessage);
+        const errorMessage = errorBody.error || 'An unexpected error occured';
+        throw new Error(errorMessage);
     }
 }
 
