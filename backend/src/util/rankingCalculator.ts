@@ -15,13 +15,13 @@ type ValidWeightClasses = {
   };
    
 // Function to check if the user's age falls within the age class range
-const isWithinAgeClass = (userAge: number, ageClass: string): boolean => {
+export const isWithinAgeClass = (userAge: number, ageClass: string): boolean => {
   const [lowerBound, upperBound] = ageClass.split('-').map(Number);
   return userAge >= lowerBound && userAge <= upperBound;
 };
 
 // Function to determine the weight class of the user based on sex
-const getUserWeightClass = (userWeight: number, sex: 'M' | 'F', validWeightClasses: ValidWeightClasses): string => {
+export const getUserWeightClass = (userWeight: number, sex: 'M' | 'F', validWeightClasses: ValidWeightClasses): string => {
     // Sort weight classes in ascending order
     const sortedWeightClasses = validWeightClasses[sex].sort((a, b) => parseFloat(a.replace('+', '')) - parseFloat(b.replace('+', '')));
     // console.log(sortedWeightClasses);
